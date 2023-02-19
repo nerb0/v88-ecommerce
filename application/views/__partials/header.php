@@ -11,10 +11,10 @@
 </head>
 <body>
 <?php if (!empty($links)) { ?>
-	<nav>
-		<div class="nav-logo">
-			BrandLOGO
-		</div><!--
+	<nav class="nav">
+		<a class="nav-logo" href="/home">
+			SLAP<strong>SHTICK</strong>
+		</a><!--
 		--><form class="nav-search" action="">
 			<input type="text" name="search"/>
 			<svg class="search-btn" id="searchBtn" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" width="15" height="15"><path d="M14.5 14.5l-4-4m-4 2a6 6 0 110-12 6 6 0 010 12z"></path></svg>
@@ -26,9 +26,11 @@
 				<a class="nav-link <?= $is_active ?>" href="<?= $link ?>"><?= $title ?></a>
 <?php		} ?>
 			<div class="nav-user dropdown" href="/users/account/">
-				<strong>User Fullname</strong>
+			<strong><?= "{$user["first_name"]} {$user["last_name"]}" ?></strong>
 				<div class="dropdown-toggle">
-					<svg class="dropdown-toggle-btn dropdown-toggle-closed" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 1.5l-7 12h14l-7-12z" stroke-linejoin="round"></path></svg>
+					<svg class="dropdown-toggle-btn dropdown-toggle-closed" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M7.5 1.5l-7 12h14l-7-12z" stroke-linejoin="round"></path>
+					</svg>
 				</div>
 				<div class="dropdown-list transparent">
 					<a class="dropdown-item-group" href="/users/profile">
@@ -37,7 +39,7 @@
 						</svg><!--
 						--><span class="dropdown-item-text">Account Settings</span>
 					</a>
-					<a class="dropdown-item-group" href="/users/logout">
+					<a class="dropdown-item-group" href="/logout">
 						<svg class="dropdown-item-icon logout-icon" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" width="15" height="15">
 							<path d="M13.5 7.5l-3 3.25m3-3.25l-3-3m3 3H4m4 6H1.5v-12H8"></path>
 						</svg><!--
@@ -53,4 +55,9 @@
 			</a>
 		</div>
 	</nav>
+<?php } ?>
+<?php if (!empty($message)) { ?>
+	<div class="notif-message <?= $message_type ?>">
+		<?= $message ?>
+	</div>
 <?php } ?>

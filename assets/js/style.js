@@ -61,7 +61,7 @@ $(document).ready(function() {
 			$(button).addClass("dropdown-toggle-closed");
 			$(".dropdown-list").addClass("transparent");
 		}
-	})
+	});
 	$(".dropdown-toggle").click(function(e) {
 		e.stopPropagation();
 		const button = $(this).find(".dropdown-toggle-btn")["0"];
@@ -83,7 +83,7 @@ $(document).ready(function() {
 	});
 
 	$("#changePasswordToggle").click(function(e) {
-		const fieldset = $(this).siblings("fieldset")
+		const fieldset = $(this).siblings("fieldset");
 		if (fieldset.attr("disabled")) {
 			fieldset.removeAttr("disabled");
 			fieldset.removeClass("hidden");
@@ -93,5 +93,23 @@ $(document).ready(function() {
 			fieldset.addClass("hidden");
 			fieldset.find("[name='change_password']").val("0");
 		}
-	})
+	});
+
+	const cartSelectAll = document.getElementById("cartSelectAll");
+	$(cartSelectAll).change(function(e) {
+		if (this.checked) {
+			$("#userCart input[type='checkbox']").prop("checked", "true");
+		} else {
+			$("#userCart input[type='checkbox']").prop("checked", "");
+		}
+	}) 
+
+	const setSameBillingBtn = document.getElementById("setSameBillingBtn");
+	$(setSameBillingBtn).change(function(e) {
+		if (this.checked) {
+			$("#billingAddressForm").addClass("hidden");
+		} else {
+			$("#billingAddressForm").removeClass("hidden");
+		}
+	});
 });

@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-	<main class="center-container h-screen w-screen">
+	<main class="center-container h-screen w-screen relative">
+		<p class="index-header">SLAP<strong>SHTICK</strong></p>
 		<form action="/users/process_login/" method="post">
 			<input type="hidden" value="<?= $this->security->get_csrf_hash() ?>" name="<?= $this->security->get_csrf_token_name() ?>" />
 			<div class="user-form login-form mx-auto shadow-lg">
@@ -7,10 +8,10 @@
 					<input type="text" name="email" id="email"  />
 				</label>
 				<label class="input-default input-password" style="--label: 'Password'">
-					<input type="text" name="password"  />
+					<input type="password" name="password"  />
 					<span id="passwordToggle"></span>
 				</label>
-				<div class="light-effect-container">
+				<div class="light-effect-container mt-md">
 					<span id="lightEffect" class="light-effect light-hidden" style="--radius:600px;"></span>
 					<input type="submit" value="Login" class="btn btn-xl btn-sharp btn-outline-primary btn-span" />
 				</div>

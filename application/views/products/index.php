@@ -26,7 +26,7 @@
 				<h3>Create a Review</h3>
 				<form action="/products/1/review" class="review-form" method="post">
 					<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>" />
-					<textarea name="message" placeholder="Enter message here..." class="input-textarea"></textarea><!--
+					<textarea name="message" placeholder="Enter message here..." class="btn-outline-secondary input-textarea"></textarea><!--
 					--><input type="submit" value="Send Message" class="add-btn btn btn-md btn-sharp btn-outline-secondary btn-span" />
 				</form>
 				<h2>Reviews</h2>
@@ -43,7 +43,7 @@
 							</li>
 							<form action="/review/1/reply" method="post" class="reply-form">
 								<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>" />
-								<textarea name="message" placeholder="Enter message here..." class="input-textarea"></textarea><!--
+								<textarea name="message" placeholder="Enter message here..." class="btn-outline-secondary input-textarea"></textarea><!--
 								--><input type="submit" value="Send Message" class="add-btn btn btn-md btn-sharp btn-outline-secondary btn-span" />
 							</form>
 						</ul>

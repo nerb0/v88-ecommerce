@@ -53,7 +53,13 @@ $route["default_controller"] = "prototypes";
 $route["404_override"] = "";
 $route["translate_uri_dashes"] = FALSE;
 
+$route["users/login"] = "404";
+$route["users/logout"] = "404";
 $route["login"] = "users/login";
+$route["logout"] = "users/logout";
 $route["register"] = "users/register";
 
 $route["home"] = "products/home";
+$route["admin/products"] = "products/list";
+$route["admin/orders"] = "orders/list";
+$route["admin/orders/show/(:int)"] = "orders/show/$1";

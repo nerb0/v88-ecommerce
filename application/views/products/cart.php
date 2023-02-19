@@ -5,7 +5,7 @@
 			<label for="cartSelectAll" class="cart-header">
 				<input type="checkbox" id="cartSelectAll" class="btn cart-select-all" /> Select all
 			</label>
-			<form action="/products/validate_checkout">
+			<form action="/products/validate_checkout" id="userCart">
 				<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>" />
 				<div class="cart-item">
 					<input type="checkbox" name="cart_item[]" value="1" class="cart-checkbox btn btn-outline-secondary"/><!--

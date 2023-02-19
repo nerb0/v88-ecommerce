@@ -15,8 +15,8 @@
 				<div class="change-password-toggle" id="changePasswordToggle">Change Password</div>
 				<fieldset class="hidden" disabled="true">
 					<input type="hidden" value="0" name="change_password"/>
-					<label class="input-default input-password" style="--label: 'Password'">
-						<input type="text" name="password"  />
+					<label class="input-default input-password" style="--label: 'Old Password'">
+						<input type="text" name="old_password"  />
 						<span id="passwordToggle"></span>
 					</label>
 					<label class="input-default input-password" style="--label: 'New Password'">

@@ -1,6 +1,7 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-	<main class="center-container h-screen w-screen">
-		<form action="/users/process_login/" method="post">
+	<main class="center-container h-screen w-screen relative">
+		<p class="index-header">SLAP<strong>SHTICK</strong></p>
+		<form action="/users/process_register" method="post">
 			<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
 			<div class="user-form register-form mx-auto shadow-lg">
 				<div class="input-group">

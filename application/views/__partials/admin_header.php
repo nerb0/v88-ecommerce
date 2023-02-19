@@ -11,16 +11,18 @@
 </head>
 <body>
 <?php if (!empty($links)) { ?>
-	<nav>
-		<div class="admin-nav-logo">
-			Dashboard
-		</div>
-		<div class="admin-nav-links">
+	<nav class="admin-nav">
+		<a class="nav-logo" href="/admin/orders">
+			SLAP<strong>SHTICK</strong>
+		</a><!--
+		--><div class="nav-links">
 <?php	foreach($links as $title => $link) {
 			$is_active = ($link == "#") ? "active" : "";
 ?>
 			<a class="nav-link <?= $is_active ?>" href="<?= $link ?>"><?= $title ?></a>
 <?php	} ?>
 		</div>
-	</nav>
+		<a href="/users/logout" class="admin-logout">Logout</a>
+	</nav><!--
 <?php } ?>
+	--><main class="admin-container">
