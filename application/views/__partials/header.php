@@ -8,6 +8,7 @@
 	<script src="/assets/js/jquery.min.js"></script>
 	<script src="/assets/js/style.js"></script>
 	<link href="/assets/css/style.css" rel="stylesheet">
+	<link href="/assets/css/util.css" rel="stylesheet">
 </head>
 <body>
 <?php if (!empty($links)) { ?>
@@ -47,7 +48,7 @@
 					</a>
 				</div>
 			</div>
-			<a class="nav-cart" href="/products/cart">
+			<a class="nav-cart" href="/cart">
 				<svg class="cart-icon" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
 					<path d="M.5.5l.6 2m0 0l2.4 8h11v-6a2 2 0 00-2-2H1.1zm11.4 12a1 1 0 110-2 1 1 0 010 2zm-8-1a1 1 0 112 0 1 1 0 01-2 0z"></path>
 					<div class="cart-count">12</div>

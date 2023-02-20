@@ -15,3 +15,7 @@ function render_admin_html($controller, $views, $header_data = [], $footer_data 
 	}
 	$controller->load->view('__partials/admin_footer', $footer_data);
 }
+
+function get_extension($filename) {
+	return pathinfo($filename, PATHINFO_EXTENSION);
+}

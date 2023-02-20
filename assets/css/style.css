@@ -4,6 +4,7 @@
 	--fg-placeholder: #94a3b8;
 	--secondary: #cbd5e1;
 	--secondary-dark: #0f172a;
+	--transparent-dark: #0f172abb;
 	--fg-gutter: #d1d5db;
 	--admin-nav-primary: #991b1b;
 	--admin-nav-primary-dark: #7f1d1d;
@@ -28,101 +29,6 @@
 body {
 	background-color: var(--primary);
 }
-.h-full {
-	height: 100%;
-}
-.w-full {
-	width: 100%;
-}
-.h-screen {
-	height: 100vh;
-	min-height: 800px;
-}
-.w-screen {
-	width: 100vw;
-	min-width: 1620px;
-}
-
-.mx-auto {
-	margin-right: auto;
-	margin-left: auto;
-}
-.ml-sm {
-	margin-left: 5px;
-}
-.ml {
-	margin-left: 10px;
-}
-.ml-md {
-	margin-left: 25px;
-}
-.ml-xl {
-	margin-left: 50px;
-}
-.mt-sm {
-	margin-top: 5px;
-}
-.mt {
-	margin-top: 10px;
-}
-.mt-md {
-	margin-top: 25px;
-}
-.mt-xl {
-	margin-top: 50px;
-}
-.p-sm {
-	padding: 5px;
-}
-.p {
-	padding: 10px;
-}
-.p-md {
-	padding: 25px;
-}
-.p-xl {
-	padding: 50px;
-}
-
-.shadow-sm {
-	box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-}
-.shadow {
-	box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-}
-.shadow-md {
-	box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-}
-.shadow-lg {
-	box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-}
-.center-container {
-	display: table;
-}
-.center-container > * {
-	display: table-cell;
-	vertical-align: middle;
-}
-.block {
-	display: block;
-}
-.inline-block {
-	display: inline-block;
-}
-.absolute {
-	position: absolute;
-}
-.relative {
-	position: relative;
-}
-
-.bg-primary {
-	background-color: var(--primary);
-}
-.bg-transparent {
-	background: transparent;
-}
-
 .input-textarea {
 	padding: 8px;
 	background-color: var(--primary);
@@ -147,6 +53,9 @@ body {
 	color: var(--primary-light);
 	border-bottom: 2px solid gray;
 }
+.input-dark > input {
+	color: var(--secondary-dark);
+}
 .input-default::after {
 	position: absolute;
 	left: 5px;
@@ -158,6 +67,7 @@ body {
 		left 0.15s ease-out,
 		color 0.15s ease-out;
 }
+.input-default:has(input:not([value=""]))::after,
 .input-default.has-value::after,
 .input-default:focus-within::after {
 	font-weight: bold;
@@ -167,6 +77,11 @@ body {
 	transition: top 0.15s ease-in,
 		left 0.15s ease-in,
 		color 0.15s ease-in;
+}
+.input-dark:has(input:not([value=""], textarea))::after,
+.input-dark.has-value::after,
+.input-dark:focus-within::after {
+	color: var(--secondary-dark);
 }
 .input-default.has-value > input,
 .input-default:focus-within > input{
@@ -231,6 +146,19 @@ body {
 	transition: background-color 0.15s ease-in,
 			color 0.15s ease-in;
 }
+.btn-outline-primary-dark {
+	border: 1px solid var(--primary);
+	background-color: var(--primary);
+	color: var(--secondary);
+	transition: background-color 0.15s ease-out,
+			color 0.15s ease-out;
+}
+.btn-outline-primary-dark:hover {
+	background-color: transparent;
+	color: var(--primary);
+	transition: background-color 0.15s ease-in,
+			color 0.15s ease-in;
+}
 .btn-outline-secondary {
 	border: 1px solid var(--secondary-dark);
 	background-color: var(--secondary-dark);
@@ -272,16 +200,6 @@ body {
 .btn-span {
 	box-sizing: border-box;
 	width: 100%;
-}
-
-.text-right {
-	text-align: right;
-}
-.text-left {
-	text-align: left;
-}
-.text-center {
-	text-align: center;
 }
 
 .light-effect-container {
@@ -1334,33 +1252,143 @@ body {
 	object-fit: cover;
 }
 
-.hidden {
-	display: none;
+.modal-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 100vw;
+	display: table;
+	background-color: var(--transparent-dark);
+	z-index: 100000;
 }
-.transparent {
-	opacity: 0;
-	transition: opacity 0.15s ease-out;
-	pointer-events: none;
+.modal {
+	display: table-cell;
+	vertical-align: middle;
 }
-.animate-pulse {
-	animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.modal > div {
+	margin: 0 auto;
+}
+.edit-product {
+	position: relative;
+	border-radius: 10px;
+	background-color: var(--secondary);
+	box-sizing: border-box;
+	width: 800px;
+	padding: 25px;
+}
+.edit-product-description {
+	box-sizing: border-box;
+	resize: none;
+	border-width: 2px;
+	height: 80px;
+}
+.edit-product-close {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	height: 15px;
+	width: 15px;
+	fill: none;
+	cursor: pointer;
+	stroke: var(--secondary-dark);
+	border-radius: 5px;
+	padding: 5px;
+	stroke-width: 1.5px;
+}
+.edit-product-close:hover {
+	background-color: var(--admin-nav-secondary);
+	stroke: var(--primary-light);
+	stroke-width: 2px;
+}
+.edit-product-num-group > .input-default {
+	display: inline-block;
+	width: 240px;
+}
+.edit-product-num-group > .input-default:not(:last-child) {
+	margin-right: 15px;
+}
+.edit-product-category-group > * {
+	display: inline-block;
+}
+.edit-product-category-group > .new-category {
+	margin-left: 30px;
+	width: 450px;
+}
+.edit-image-header {
+	display: inline-block;
+	margin-right: 10px;
+	vertical-align: middle;
+}
+.upload-image-btn {
+	display: inline-block;
+	vertical-align: middle;
 }
 
-@keyframes slide-in-out {
-	0%, 100% {
-		opacity: 0;
-		transform: translateX(200%);
-	}
-	10%, 80% {
-		opacity: 1;
-		transform: translateX(0);
-	}
+.edit-image-list {
+	list-style-type: none;
+	margin-top: 10px;
+	height: 150px;
+	overflow-y: scroll;
+	border: 1px solid var(--primary);
+	padding: 10px 0;
 }
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: .5;
-  }
+.edit-image-row {
+	height: 50px;
+	width: 100%;
+	margin: 0 auto;
+}
+.edit-image-row:not(:first-child) {
+	margin-top: 15px;
+}
+.edit-image-row > * {
+	display: inline-block;
+	vertical-align: middle;
+	color: var(--primary);
+}
+.edit-image-preview {
+	height: 50px;
+	width: 50px;
+	margin-right: 20px;
+	object-fit: cover;
+}
+.edit-image-row > svg {
+	box-sizing: border-box;
+}
+.edit-image-drag {
+	box-sizing: border-box;
+	height: 30px;
+	width: 30px;
+	stroke: var(--primary);
+	margin-right: 20px;
+	cursor: move;
+}
+.edit-image-remove {
+	cursor: pointer;
+	opacity: 0;
+	pointer-events: none;
+	fill: none;
+	stroke: var(--admin-nav-secondary);
+	height: 20px;
+	width: 20px;
+	margin: 0 15px;
+	box-sizing: border-box;
+	stroke-width: 2px;
+}
+.edit-image-remove:hover {
+	stroke: var(--primary-light);
+	background-color: var(--admin-nav-primary);
+}
+.edit-image-name {
+	width: 300px;
+}
+.edit-image-row:hover > .edit-image-remove {
+	opacity: 1;
+	pointer-events: all;
+}
+.edit-image-placeholder {
+	height: 50px;
+	width: 100%;
+	padding: 5px 0;
+	background-color: var(--transparent-dark);
 }

@@ -7,8 +7,23 @@ class Users extends CI_Controller {
 	}
 
 	public function index() {
-		$user_id = $this->session->userdata("user_id");
-		redirect($user_id ? "/dashboard" : "login");
+		$user = $this->User->get_by_id($this->session->userdata("user_id"));
+		if(empty($user)) {
+			redirect('login');
+		}
+		render_html($this, [
+			"products/home" => [
+				"user" => $user
+			]
+		], [
+			"links" => [
+				"Home" => "#",
+				"Catalog" => "/products/catalog",
+			],
+			"message" => $this->session->flashdata("message"),
+			"message_type" => $this->session->flashdata("message_type"),
+			"user" => $user
+		]);
 	}
 
 	public function login() {
@@ -86,7 +101,8 @@ class Users extends CI_Controller {
 		redirect('/login');
 	}
 
-	// NOTE: The functions below are for form_validation
+	// NOTE: FORM VALIDATION's CUSTOM CALLBACK FUNCTIONS
+	// The functions below are for form_validation
 	// All of the functions below are remove from the route
 	public function valid_name($name) {
 		// NOTE: Custom callback function normally overrides the required callback of CodeIgniter

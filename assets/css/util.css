@@ -1,0 +1,147 @@
+.h-full {
+	height: 100%;
+}
+.w-full {
+	width: 100%;
+}
+.h-screen {
+	height: 100vh;
+	min-height: 800px;
+}
+.w-screen {
+	width: 100vw;
+	min-width: 1620px;
+}
+
+.mx-auto {
+	margin-right: auto;
+	margin-left: auto;
+}
+.ml-sm {
+	margin-left: 5px;
+}
+.ml {
+	margin-left: 10px;
+}
+.ml-md {
+	margin-left: 25px;
+}
+.ml-xl {
+	margin-left: 50px;
+}
+.mt-sm {
+	margin-top: 5px;
+}
+.mt {
+	margin-top: 10px;
+}
+.mt-md {
+	margin-top: 25px;
+}
+.mt-xl {
+	margin-top: 50px;
+}
+.p-sm {
+	padding: 5px;
+}
+.p {
+	padding: 10px;
+}
+.p-md {
+	padding: 25px;
+}
+.p-xl {
+	padding: 50px;
+}
+
+.shadow-sm {
+	box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+.shadow {
+	box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+.shadow-md {
+	box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+.shadow-lg {
+	box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+.center-container {
+	display: table;
+}
+.center-container > * {
+	display: table-cell;
+	vertical-align: middle;
+}
+.block {
+	display: block;
+}
+.inline-block {
+	display: inline-block;
+}
+.absolute {
+	position: absolute;
+}
+.relative {
+	position: relative;
+}
+
+.bg-primary {
+	background-color: var(--primary);
+}
+.bg-transparent {
+	background: transparent;
+}
+
+.text-dark {
+	color: var(--secondary-dark);
+}
+.text-primary {
+	color: var(--primary);
+}
+.text-secondary {
+	color: var(--secondary);
+}
+.text-right {
+	text-align: right;
+}
+.text-left {
+	text-align: left;
+}
+.text-center {
+	text-align: center;
+}
+
+.hidden {
+	display: none;
+}
+.transparent {
+	opacity: 0;
+	transition: opacity 0.15s ease-out;
+	pointer-events: none;
+}
+.animate-pulse {
+	animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.overflow-hidden {
+	overflow: hidden;
+}
+
+@keyframes slide-in-out {
+	0%, 100% {
+		opacity: 0;
+		transform: translateX(200%);
+	}
+	10%, 80% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}

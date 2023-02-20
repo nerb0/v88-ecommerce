@@ -51,15 +51,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $route["default_controller"] = "prototypes";
 $route["404_override"] = "";
-$route["translate_uri_dashes"] = FALSE;
+$route["translate_uri_dashes"] = TRUE;
 
-$route["users/login"] = "404";
-$route["users/logout"] = "404";
+$route["home"] = "users";
 $route["login"] = "users/login";
 $route["logout"] = "users/logout";
 $route["register"] = "users/register";
+$route["users/login"] = "404";
+$route["users/logout"] = "404";
+$route["users/register"] = "404";
 
-$route["home"] = "products/home";
+$route["cart"] = "cart-Items";
+$route["cart/checkout"] = "cart-Items/checkout";
+$route["cart-Items/checkout"] = "404";
+$route["cart-Items"] = "404";
+
 $route["admin/products"] = "products/list";
+$route["admin/products/add"] = "products/list";
 $route["admin/orders"] = "orders/list";
-$route["admin/orders/show/(:int)"] = "orders/show/$1";
+$route["admin/orders/show/(:num)"] = "orders/show/$1";
+
+// NOTE: Routes for API Endpoints
+$route["api/html/products/edit/(:num)"] = "products/edit_html/$1";
+$route["api/html/products/add"] = "products/add_html";
+
+$route["products/list"] = "404";
+$route["orders/list"] = "404";
+$route["orders/show/(:any)"] = "404";

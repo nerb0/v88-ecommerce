@@ -1,5 +1,9 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 	?>
+		<div class="modal-container hidden" id="modalContainer">
+			<div id="modal" class="modal">
+			</div>
+		</div>
 		<form class="order-header" action="/orders/filter">
 			<input type="hidden" value="<?= $this->security->get_csrf_hash() ?>" name="<?= $this->security->get_csrf_token_name() ?>" />
 			<div class="admin-search">
@@ -11,7 +15,7 @@
 				</div>
 			</div><!--
 			--><div class="admin-misc">
-				<span class="btn btn-md btn-outline-secondary" id="addNewProduct">Add a New Product</span>
+				<span id="addProductBtn" class="btn btn-md btn-outline-secondary">Add a New Product</span>
 			</div>
 		</form>
 		<table class="admin-list">
@@ -27,41 +31,21 @@
 				</tr>
 			</thead>
 			<tbody>
+<?php		foreach ($products as $product) {
+				$main_image = json_decode($product["images"], true)["main"];
+?>
 				<tr>
-					<td class="text-center"><img src="" alt="" class="product-image"/></td>
-					<td class="text-center">1</td>
-					<td>Bob</td>
-					<td>16/12/2222</td>
-					<td>123 something streeet something address</td>
-					<td>$125.23</td>
+					<td class="text-center"><img src="<?= $main_image ?>" alt="" class="product-image"/></td>
+					<td class="text-center"><?= $product["id"] ?></td>
+					<td><?= $product["name"] ?></td>
+					<td><?= $product["quantity"] ?></td>
+					<td><?= $product["sold"] ?? 0 ?></td>
+					<td><?= $product["price"] ?></td>
 					<td>
-						<span class="btn btn-md btn-outline-secondary product-edit">Edit</span>
-						<span class="btn btn-md btn-outline-error product-remove">Remove</span>
+						<span class="btn btn-md btn-outline-secondary product-edit" data-id="<?= $product["id"] ?>">Edit</span>
+						<span class="btn btn-md btn-outline-error product-remove" data-id="<?= $product["id"] ?>">Remove</span>
 					</td>
 				</tr>
-				<tr>
-					<td class="text-center"><img src="" alt="" class="product-image"/></td>
-					<td class="text-center">1</td>
-					<td>Bob</td>
-					<td>16/12/2222</td>
-					<td>123 something streeet something address</td>
-					<td>$125.23</td>
-					<td>
-						<span class="btn btn-md btn-outline-secondary product-edit">Edit</span>
-						<span class="btn btn-md btn-outline-error product-remove">Remove</span>
-					</td>
-				</tr>
-				<tr>
-					<td class="text-center"><img src="" alt="" class="product-image"/></td>
-					<td class="text-center">1</td>
-					<td>Bob</td>
-					<td>16/12/2222</td>
-					<td>123 something streeet something address</td>
-					<td>$125.23</td>
-					<td>
-						<span class="btn btn-md btn-outline-secondary product-edit">Edit</span>
-						<span class="btn btn-md btn-outline-error product-remove">Remove</span>
-					</td>
-				</tr>
+<?php		} ?>
 			</tbody>
 		</table>
