@@ -115,7 +115,6 @@ $(document).ready(function () {
 		}
 	});
 
-
 	// NOTE: This is for disabling sibling checkbox from selecting the main image
 	// Decided to use radio box since the logic already is applicable to radio boxes
 	// $(document).on("change", ".edit-image-set-main", function (e) {
@@ -136,9 +135,6 @@ $(document).ready(function () {
 	// 	}
 	// });
 
-	// NOTE: To assign its estimated id base on previous images,
-	// Necessary for assigning the main picture
-
 	const body = $("body");
 	const modalContainer = $("#modalContainer");
 	const modal = $("#modal");
@@ -152,11 +148,24 @@ $(document).ready(function () {
 			placeholder: "edit-image-placeholder",
 			handle: ".edit-image-drag",
 			update: function (e) {
-				$(".edit-new-image").each(function (index) {
-					$(this).attr("value", index);
-					$(this).attr("id", index);
-					$(this).parent("label").attr("for", index);
+				let oldImageIndex = 0;
+				let newImageIndex = 0;
+				let imageSortedIndex = {};
+				$(".edit-image-set-main").each(function (index) {
+					if ($(this).hasClass("edit-new-image")) {
+						$(this).attr("value", newImageIndex);
+						$(this).attr("id", newImageIndex);
+						$(this).parent("label").attr("for", newImageIndex);
+						if (!this.checked)
+							imageSortedIndex[index] = { new: newImageIndex++ };
+					} else if (!this.checked) imageSortedIndex[index] = { old: oldImageIndex++ };
 				});
+				$("#imageSort").prop("value", JSON.stringify(imageSortedIndex));
+				// $(".edit-new-image").each(function (index) {
+				// 	$(this).attr("value", index);
+				// 	$(this).attr("id", index);
+				// 	$(this).parent("label").attr("for", index);
+				// });
 			},
 		});
 
@@ -174,20 +183,11 @@ $(document).ready(function () {
 		uploadCounter = 0;
 	});
 
-	$(".product-edit").click(function (e) {
-		const id = $(this).attr("data-id");
+	$(document).on("click", ".admin-action", function (e) {
+		const id = $(this).attr("data-product-id") || "";
+		const url = $(this).attr("data-url");
 		$.get(
-			`/api/html/products/edit/${id}`,
-			function (res) {
-				openModal(res.response);
-			},
-			"json"
-		);
-	});
-
-	$("#addProductBtn").click(function (e) {
-		$.get(
-			`/api/html/products/add`,
+			`${url}/${id}`,
 			function (res) {
 				openModal(res.response);
 			},
@@ -206,15 +206,20 @@ $(document).ready(function () {
 
 		const fileReader = new FileReader();
 		fileReader.addEventListener("load", function (e) {
+			// NOTE: To assign its estimated id base on previous images,
+			// Necessary for assigning the main picture
 			let lastId = document.querySelectorAll(".edit-image-set-main");
 			lastId = parseInt($(lastId[lastId.length - 1]).attr("id")) + 1 || 1;
+
 			const name = `image${lastId}`;
 			const imageRow = `
 				<li class="edit-image-row">
 					<svg class="edit-image-drag" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
 						<path d="M9.5 3a.5.5 0 110-1 .5.5 0 010 1zm0 5a.5.5 0 110-1 .5.5 0 010 1zm0 5a.5.5 0 110-1 .5.5 0 010 1zm-4-10a.5.5 0 110-1 .5.5 0 010 1zm0 5a.5.5 0 110-1 .5.5 0 010 1zm0 5a.5.5 0 110-1 .5.5 0 010 1z"></path>
 					</svg><!--
-					--><img src="${e.target.result}" alt="image${lastId}" class="edit-image-preview" /><!--
+					--><img src="${
+						e.target.result
+					}" alt="image${lastId}" class="edit-image-preview" /><!--
 					--><p class="edit-image-name">${file.name}</p><!--
 					--><svg class="edit-image-remove" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
 						<path d="M4 .5H1.5a1 1 0 00-1 1V4M6 .5h3m2 0h2.5a1 1 0 011 1V4M.5 6v3m14-3v3m-14 2v2.5a1 1 0 001 1H4M14.5 11v2.5a1 1 0 01-1 1H11m-7-7h7m-5 7h3"></path>
@@ -236,4 +241,39 @@ $(document).ready(function () {
 			readUrl(this.files.item(i));
 		}
 	});
+
+	// For Temporarily deleting images
+	$(document).on("click", ".edit-image-remove", function (e) {
+		$(this).parent().remove();
+	});
+
+	$("#productImageSub").scroll(function (e) {
+		const maxScroll = this.scrollWidth - this.clientWidth;
+		if (this.scrollLeft > 10) {
+			$(this).addClass("product-image-sub-left");
+		} else {
+			$(this).removeClass("product-image-sub-left");
+		}
+
+		if (this.scrollLeft < maxScroll - 10) {
+			$(this).addClass("product-image-sub-right");
+		} else {
+			$(this).removeClass("product-image-sub-right");
+		}
+	});
+
+	const orderList = $("#orderList");
+	$(document).on("click", ".order-page-btn", function (e) {
+		const page = this.id;
+		$.get(
+			`/api/html/orders/get/page/${page}`,
+			(res) => {
+				orderList.html(res.response);
+				$(this).siblings().removeClass("active");
+				$(this).addClass("active");
+			},
+			"json"
+		);
+	});
+	$(".order-page-btn#1").click(); // NOTE: To trigger and fetch data onload
 });

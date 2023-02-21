@@ -6,6 +6,7 @@
 	</svg>
 	<h3 class="text-dark">Add new Product</h3>
 	<form action="/products/add" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="image_sort" id="imageSort"/>
 		<input type="hidden" value="<?= $this->security->get_csrf_hash() ?>" name="<?= $this->security->get_csrf_token_name() ?>" />
 		<label class="input-default input-dark" style="--label: 'Product Name'">
 			<input type="text" name="name"  value="Test Product 1"/>
@@ -19,7 +20,7 @@
 				<input type="number" name="quantity" min="0" value="24" />
 			</label>
 			<label class="input-default input-dark" style="--label: 'Product Price'">
-				<input type="number" step="0.001" name="price" min="0.1" value="42.4"/>
+				<input type="number" step="0.01" name="price" min="0.01" value="42.4"/>
 			</label>
 		</div>
 

@@ -41,97 +41,15 @@
 				</div>
 				<input type="submit" value="Filter" class="btn btn-md btn-sharp btn-outline-secondary " />
 			</form><!--
-			--><div class="product-list">
-				<a href="/products/show/1" class="product-card">
-					<img src="" alt="" class="product-image" />
-					<p class="product-name text-center">Product Name</p>
-					<p class="product-price">$242442</p>
-					<p class="product-sold">Sold: 4242</p>
+			--><div class="product-list"><!--
+<?php			foreach ($products as $product) { ?>
+				--><a href="/products/show/<?= $product["id"] ?>" class="product-card">
+					<img src="<?= json_decode($product["images"], true)["main"] ?>" alt="" class="product-image" />
+					<p class="product-name text-center"><?= $product["name"] ?></p>
+					<p class="product-price">$<?= number_format($product["price"], 2) ?></p>
+					<p class="product-sold">Sold: <?= $product["sold"] ?? 0 ?></p>
 				</a><!--
-				--><a href="/products/show/1" class="product-card">
-					<img src="" alt="" class="product-image" />
-					<p class="product-name text-center">Product Name</p>
-					<p class="product-price">$242442</p>
-					<p class="product-sold">Sold: 4242</p>
-				</a><!--
-				--><a href="/products/show/1" class="product-card">
-					<img src="" alt="" class="product-image" />
-					<p class="product-name text-center">Product Name</p>
-					<p class="product-price">$242442</p>
-					<p class="product-sold">Sold: 4242</p>
-				</a><!--
-				--><a href="/products/show/1" class="product-card">
-					<img src="" alt="" class="product-image" />
-					<p class="product-name text-center">Product Name</p>
-					<p class="product-price">$242442</p>
-					<p class="product-sold">Sold: 4242</p>
-				</a><!--
-				--><a href="/products/show/1" class="product-card">
-					<img src="" alt="" class="product-image" />
-					<p class="product-name text-center">Product Name</p>
-					<p class="product-price">$242442</p>
-					<p class="product-sold">Sold: 4242</p>
-				</a><!--
-				--><a href="/products/show/1" class="product-card">
-					<img src="" alt="" class="product-image" />
-					<p class="product-name text-center">Product Name</p>
-					<p class="product-price">$242442</p>
-					<p class="product-sold">Sold: 4242</p>
-				</a><!--
-				--><a href="/products/show/1" class="product-card">
-					<img src="" alt="" class="product-image" />
-					<p class="product-name text-center">Product Name</p>
-					<p class="product-price">$242442</p>
-					<p class="product-sold">Sold: 4242</p>
-				</a><!--
-				--><a href="/products/show/1" class="product-card">
-					<img src="" alt="" class="product-image" />
-					<p class="product-name text-center">Product Name</p>
-					<p class="product-price">$242442</p>
-					<p class="product-sold">Sold: 4242</p>
-				</a><!--
-				--><a href="/products/show/1" class="product-card">
-					<img src="" alt="" class="product-image" />
-					<p class="product-name text-center">Product Name</p>
-					<p class="product-price">$242442</p>
-					<p class="product-sold">Sold: 4242</p>
-				</a><!--
-				--><a href="/products/show/1" class="product-card">
-					<img src="" alt="" class="product-image" />
-					<p class="product-name text-center">Product Name</p>
-					<p class="product-price">$242442</p>
-					<p class="product-sold">Sold: 4242</p>
-				</a><!--
-				--><a href="/products/show/1" class="product-card">
-					<img src="" alt="" class="product-image" />
-					<p class="product-name text-center">Product Name</p>
-					<p class="product-price">$242442</p>
-					<p class="product-sold">Sold: 4242</p>
-				</a><!--
-				--><a href="/products/show/1" class="product-card">
-					<img src="" alt="" class="product-image" />
-					<p class="product-name text-center">Product Name</p>
-					<p class="product-price">$242442</p>
-					<p class="product-sold">Sold: 4242</p>
-				</a><!--
-				--><a href="/products/show/1" class="product-card">
-					<img src="" alt="" class="product-image" />
-					<p class="product-name text-center">Product Name</p>
-					<p class="product-price">$242442</p>
-					<p class="product-sold">Sold: 4242</p>
-				</a><!--
-				--><a href="/products/show/1" class="product-card">
-					<img src="" alt="" class="product-image" />
-					<p class="product-name text-center">Product Name</p>
-					<p class="product-price">$242442</p>
-					<p class="product-sold">Sold: 4242</p>
-				</a><!--
-				--><a href="/products/show/1" class="product-card">
-					<img src="" alt="" class="product-image" />
-					<p class="product-name text-center">Product Name</p>
-					<p class="product-price">$242442</p>
-					<p class="product-sold">Sold: 4242</p>
-				</a>
-			</div>
+<?php			} ?>
+			--></div>
 		</div>
 	</main>

@@ -18,7 +18,9 @@ class Products extends CI_Controller {
 			redirect('login');
 		}
 		render_html($this, [
-			"products/catalog" => []
+			"products/catalog" => [
+				"products" => $this->Product->get_all(),
+			]
 		], [
 			"links" => [
 				"Home" => "/home",
@@ -30,13 +32,18 @@ class Products extends CI_Controller {
 		]);
 	}
 
-	public function show(int $product_id) {
+	public function show($product_id) {
 		$user = $this->User->get_by_id($this->session->userdata("user_id"));
 		if(empty($user)) {
 			redirect('login');
 		}
+
+		$products = $this->Product->get_by_id($product_id);
+		$products["images"] = json_decode($products["images"], true);
 		render_html($this, [
-			"products/index" => []
+			"products/index" => [
+				"product" => $products
+			]
 		], [
 			"links" => [
 				"Home" => "/home",
@@ -53,9 +60,11 @@ class Products extends CI_Controller {
 		if(empty($user)) {
 			redirect('login');
 		}
+
+		$products = $this->Product->get_all();
 		render_admin_html($this, [
 			"admin/products/list" => [
-				"products" => $this->Product->get_all(),
+				"products" => $products
 			]
 		], [
 			"links" => [
@@ -67,25 +76,59 @@ class Products extends CI_Controller {
 			"user" => $user
 		]);
 	}
-
-	public function edit() {
-		var_dump($this->input->post(null, true));
+	public function edit($product_id) {
 		$result = $this->Product->validate();
-		var_dump($_FILES);
+		$post = $this->input->post(null, true);
+
+		if ($result == 'valid') {
+			$post["category_id"] = $post["category"];
+			if (!empty($post["new_category"])) {
+				$post["category_id"] = $this->Category->create($post["new_category"]);
+			}
+			$this->Product->update($product_id, $post);
+			$this->Product->upload_images(
+				$product_id,
+				$post["main_image"],
+				$post["images"],
+				// NOTE: Since the new image and old image cannot be sent on the same POST variable
+				// I put the indexes on a new variable `image_sort` based on their position
+				// The value is on a stringified JSON
+				json_decode($post["image_sort"], true)
+			);
+			$message = "Successfully edited Product #{$product_id}";
+		} else {
+			$message = $result;
+			$this->session->set_flashdata("message_type", "error");
+		}
+		$this->session->set_flashdata("message", $message);
+		redirect("/admin/products");
+	}
+	public function remove($product_id) {
+		$result = $this->Product->delete($product_id);
+		if ($result) {
+			$status = 200;
+			$message = "Successfully deleted Product #{$product_id}";
+		} else {
+			$status = 500;
+			$message = "Something went wrong. Please try again later";
+		}
+		echo json_encode([
+			"status" => $status,
+			"message" => $message,
+		]);
 	}
 	public function add() {
 		$result = $this->Product->validate();
+		$post = $this->input->post(null, true);
 
 		if ($result == 'valid') {
-			$post = $this->input->post(null, true);
-			var_dump($post);
 			$post["category_id"] = $post["category"];
 			if (!empty($post["new_category"])) {
 				$post["category_id"] = $this->Category->create($post["new_category"]);
 			}
 			$product_id = $this->Product->create($post);
 			$this->Product->upload_images($product_id, $post["main_image"]);
-			$message = "success";
+			$message = "Successfully added new Product.";
 		} else {
 			$message = $result;
 			$this->session->set_flashdata("message_type", "error");
@@ -109,6 +152,14 @@ class Products extends CI_Controller {
 			"response" => $this->load->view("__partials/add_product", [
 				"categories" => $this->Category->get_all(),
 			] , true),
+		]);
+	}
+	public function remove_html($product_id) {
+		$product = $this->Product->get_by_id($product_id);
+		echo json_encode([
+			"response" => $this->load->view("__partials/remove_product",
+				$product
+			, true),
 		]);
 	}
 

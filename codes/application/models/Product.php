@@ -73,6 +73,11 @@ class Product extends CI_Model {
 		return $this->db->query($query, [$page])->result_array();
 	}
 
+	public function delete($product_id) {
+		$query = "DELETE FROM products WHERE id = ?";
+		return $this->db->query($query, [$product_id]);
+	}
+
 	public function get_by_id($product_id) {
 		$query = "SELECT products.*
 					, SUM(JSON_EXTRACT(bought_products, CONCAT('$.\"', products.id,'\".quantity'))) as sold
@@ -90,9 +95,22 @@ class Product extends CI_Model {
 			$product["description"],
 			$product["price"],
 			$product["quantity"],
-			$product["category"],
+			$product["category_id"],
 		]);
 		return $this->db->insert_id();
+	}
+
+	public function update($product_id, $product) {
+		$query = "UPDATE products SET name = ?, description = ?, price = ?, quantity = ?, category_id = ? WHERE id = ?";
+		$result = $this->db->query($query, [
+			$product["name"],
+			$product["description"],
+			$product["price"],
+			$product["quantity"],
+			$product["category_id"],
+			$product_id
+		]);
+		return $result;
 	}
 
 	public function validate() {
@@ -114,7 +132,7 @@ class Product extends CI_Model {
 		}
 	}
 
-	public function upload_images($product_id, $main_image, $existing_image = []) {
+	public function upload_images($product_id, $main_image, $existing_image = [], $image_sort = []) {
 		$base_dir = "assets/img/products/". bin2hex("product{$product_id}");
 		if (!file_exists($base_dir)) mkdir($base_dir);
 		$UPLOAD_CONFIG = [
@@ -123,39 +141,61 @@ class Product extends CI_Model {
 		];
 		$this->load->library("upload", $UPLOAD_CONFIG);
 
-		$uploaded_images = [];
-		for($i = 0; $i < count($_FILES["new_images"]["name"]); $i++) {
-			$file_ext = $ext = get_extension($_FILES["new_images"]["name"][$i]);
-			// NOTE: This is to create a unique filename instead of just 'image(index).[ext]'
-			$filename = bin2hex("image1");
-			$target_name = "{$filename}.{$file_ext}";
-			for ($file_count = 1; file_exists("{$base_dir}/{$target_name}"); $file_count++) {
-				$filename = bin2hex("image{$file_count}");
-				$target_name = "{$filename}.{$file_ext}";
-			}
-
-			// NOTE: CodeIgniter `upload` library only reads from the global variable $_FILES when uploading file
-			// CodeIgniter's `do_upload` method does not accept a custom variable
-			// hence, manually inserting each value of $_FILES to another key inside $_FILES seems to be the only way
-			$_FILES["new_image"] = [
-				"name" => $target_name,
-				"type" => $_FILES["new_images"]["type"][$i],
-				"tmp_name" => $_FILES["new_images"]["tmp_name"][$i],
-				"error" => $_FILES["new_images"]["error"][$i],
-				"size" => $_FILES["new_images"]["size"][$i],
-			];
-			if ($this->upload->do_upload("new_image")) {
-				// NOTE: The additional "/" symbol is there since the "src" tag from images			This symbol
-				// is based on the current route not the BASEPATH/root directory of CodeIgniter	  	   ↓
-				if (ctype_digit(strval($main_image)) && $main_image == $i) $uploaded_images["main"] = "/{$base_dir}/{$target_name}";
-				else $uploaded_images["sub"][] = "/{$base_dir}/{$target_name}";
-			}
-		}
+		$upload_images = [];
+		$new_images = [];
+		$old_images = [];
 
 		foreach ($existing_image as $image_url) {
 			// NOTE: This is a workaround for checking if the string is an integer since is_int() does not seem to work
 			if (!ctype_digit(strval($main_image)) && $image_url == $main_image) $uploaded_images["main"] = $image_url;
+			else if(!empty($image_sort)) $old_images[] = $image_url;
+			else $uploaded_images["sub"][] = $image_url;
 		}
+
+		if (!empty($_FILES["new_images"]["name"])) {
+			for($i = 0; $i < count($_FILES["new_images"]["name"]); $i++) {
+				$file_ext = $ext = get_extension($_FILES["new_images"]["name"][$i]);
+				// NOTE: This is to create a unique filename instead of just 'image(index).[ext]'
+				$filename = bin2hex("image1");
+				$target_name = "{$filename}.{$file_ext}";
+				for ($file_count = 1; file_exists("{$base_dir}/{$target_name}"); $file_count++) {
+					$filename = bin2hex("image{$file_count}");
+					$target_name = "{$filename}.{$file_ext}";
+				}
+
+				// NOTE: CodeIgniter `upload` library only reads from the global variable $_FILES when uploading file
+				// CodeIgniter's `do_upload` method does not accept a custom variable
+				// hence, manually inserting each value of $_FILES to another key inside $_FILES seems to be the only way
+				$_FILES["new_image"] = [
+					"name" => $target_name,
+					"type" => $_FILES["new_images"]["type"][$i],
+					"tmp_name" => $_FILES["new_images"]["tmp_name"][$i],
+					"error" => $_FILES["new_images"]["error"][$i],
+					"size" => $_FILES["new_images"]["size"][$i],
+				];
+				if ($this->upload->do_upload("new_image")) {
+					// NOTE: The additional "/" symbol is there since the "src" tag from images
+					// is based on the current route not the BASEPATH/root directory of CodeIgniter	  	   
+					$target_dir =  "/{$base_dir}/{$target_name}";
+					if (ctype_digit(strval($main_image)) && $main_image == $i) $uploaded_images["main"] = $target_dir;
+					else if(!empty($image_sort)) $new_images[] = $target_dir;
+					else $uploaded_images["sub"][] = $target_dir;
+				}
+			}
+		}
+
+		if (!empty($image_sort)) {
+			foreach($image_sort as $image) {
+				$type = array_keys($image)[0];
+				$index = $image[$type];
+				if ($type == "new") {
+					$uploaded_images["sub"][] = $new_images[$index];
+				} else {
+					$uploaded_images["sub"][] = $old_images[$index];
+				}
+			}
+		}
+
 		$query = "UPDATE products SET images = ? WHERE id = ?";
 		$result = $this->db->query($query, [json_encode($uploaded_images), $product_id]);
 		return $result;

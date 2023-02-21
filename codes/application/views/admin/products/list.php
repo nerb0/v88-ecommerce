@@ -15,7 +15,9 @@
 				</div>
 			</div><!--
 			--><div class="admin-misc">
-				<span id="addProductBtn" class="btn btn-md btn-outline-secondary">Add a New Product</span>
+				<span id="addProductBtn" class="btn btn-md btn-outline-secondary admin-action" data-url="/api/html/products/add">
+					Add a New Product
+				</span>
 			</div>
 		</form>
 		<table class="admin-list">
@@ -40,10 +42,10 @@
 					<td><?= $product["name"] ?></td>
 					<td><?= $product["quantity"] ?></td>
 					<td><?= $product["sold"] ?? 0 ?></td>
-					<td><?= $product["price"] ?></td>
+					<td>$<?= number_format($product["price"], 2) ?></td>
 					<td>
-						<span class="btn btn-md btn-outline-secondary product-edit" data-id="<?= $product["id"] ?>">Edit</span>
-						<span class="btn btn-md btn-outline-error product-remove" data-id="<?= $product["id"] ?>">Remove</span>
+						<span class="btn btn-md btn-outline-secondary product-edit admin-action" data-url="/api/html/products/edit" data-product-id="<?= $product["id"] ?>">Edit</span>
+						<span class="btn btn-md btn-outline-error product-remove admin-action" data-url="/api/html/products/remove" data-product-id="<?= $product["id"] ?>">Remove</span>
 					</td>
 				</tr>
 <?php		} ?>

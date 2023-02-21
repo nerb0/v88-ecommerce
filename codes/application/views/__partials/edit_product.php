@@ -5,7 +5,8 @@
 		<path d="M1.5 1.5l12 12m-12 0l12-12"></path>
 	</svg>
 	<h3 class="text-dark">Edit <?= $product["name"] ?>:</h3>
-	<form action="/products/edit/1" method="post" enctype="multipart/form-data">
+	<form action="/products/edit/<?= $product["id"] ?>" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="image_sort" id="imageSort" />
 		<input type="hidden" value="<?= $this->security->get_csrf_hash() ?>" name="<?= $this->security->get_csrf_token_name() ?>" />
 		<label class="input-default input-dark has-value" style="--label: 'Product Name'">
 			<input type="text" name="name" value="<?= $product["name"] ?>" />
@@ -19,7 +20,7 @@
 				<input type="number" name="quantity" min="0" value="<?= $product["quantity"] ?>" />
 			</label>
 			<label class="input-default input-dark has-value" style="--label: 'Product Price'">
-				<input type="number" step="0.1" name="price" min="0.1" value="<?= $product["price"] ?>"/>
+				<input type="number" step="0.01" name="price" min="0.01" value="<?= $product["price"] ?>"/>
 			</label>
 		</div>
 
@@ -58,9 +59,8 @@
 						<input type="radio" checked name="main_image" class="edit-image-set-main" value="<?= $product["images"]["main"] ?>" id="0"/> main
 					</label>
 				</li>
-<?php		foreach($product["images"]["sub"] as $index => $url) {
-	?>
-				
+<?php		if(!empty($product["images"]["sub"])) {
+				foreach($product["images"]["sub"] as $index => $url) { ?>
 				<li class="edit-image-row">
 					<input type="hidden" name="images[]" value="<?= $url ?>"/>
 					<svg class="edit-image-drag" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
@@ -75,10 +75,13 @@
 						<input type="radio" name="main_image" class="edit-image-set-main" value="<?= $url ?>" id="<?= $index + 1 ?>"/> main
 					</label>
 				</li>
-<?php } ?>
+<?php			}
+			} ?>
 			</ul>
 		</div>
-		<input type="submit" class="btn btn-md btn-outline-primary-dark mt-md" value="Update"/>
-		<input type="button" class="btn btn-md btn-outline-error mt-md modal-close" value="Cancel"/>
+		<div class="text-right">
+			<input type="submit" class="btn btn-md btn-outline-primary-dark mt-md" value="Update"/>
+			<input type="button" class="btn btn-md btn-outline-error mt-md modal-close" value="Cancel"/>
+		</div>
 	</form>
 </div>

@@ -73,7 +73,9 @@ $route["admin/orders/show/(:num)"] = "orders/show/$1";
 
 // NOTE: Routes for API Endpoints
 $route["api/html/products/edit/(:num)"] = "products/edit_html/$1";
+$route["api/html/products/remove/(:num)"] = "products/remove_html/$1";
 $route["api/html/products/add"] = "products/add_html";
+$route["api/html/orders/get/page/(:num)"] = "orders/list_html/$1";
 
 $route["products/list"] = "404";
 $route["orders/list"] = "404";

@@ -6,7 +6,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="/assets/js/jquery.min.js"></script>
-	<script src="/assets/js/style.js"></script>
+	<script src="/assets/js/script.js"></script>
 	<link href="/assets/css/style.css" rel="stylesheet">
 	<link href="/assets/css/util.css" rel="stylesheet">
 </head>
