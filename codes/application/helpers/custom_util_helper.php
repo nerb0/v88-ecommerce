@@ -19,3 +19,9 @@ function render_admin_html($controller, $views, $header_data = [], $footer_data 
 function get_extension($filename) {
 	return pathinfo($filename, PATHINFO_EXTENSION);
 }
+function get_filename($path) {
+	return pathinfo($path, PATHINFO_FILENAME);
+}
+function get_basename($path) {
+	return pathinfo($path, PATHINFO_BASENAME);
+}

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title></title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../../assets/css/jquery-ui.css" />
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/jquery-ui.min.js"></script>
+	<script src="../../assets/js/script.js"></script>
+	<link href="../../assets/css/style.css" rel="stylesheet">
+	<link href="../../assets/css/util.css" rel="stylesheet">
+</head>
+<body>
+	<div class="notif-message">
+		Test Message
+	</div>
+	<nav class="admin-nav">
+		<a class="nav-logo" href="../orders/list.html">
+			SLAP<strong>SHTICK</strong>
+		</a><!--
+		--><div class="nav-links">
+			<a class="nav-link" href="../orders/list.html">Orders</a>
+			<a class="nav-link" href="../products/list.html">Products</a>
+		</div>
+		<a href="../../users/login.html" class="admin-logout">Logout</a>
+	</nav><!--
+	--><main class="admin-container">
+		<form class="order-header" action="/orders/filter">
+			<div class="admin-search">
+				<div class="order-search">
+					<input type="text" name="search" placeholder="Search" class="input-search btn-outline-secondary" />
+					<svg class="search-btn" id="orderSearchBtn" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M14.5 14.5l-4-4m-4 2a6 6 0 110-12 6 6 0 010 12z"></path>
+					</svg>
+				</div>
+			</div><!--
+			--><div class="admin-misc">
+				<select name="filter" id="filterOrder" class="btn btn-md btn-outline-secondary">
+					<option value="0">Show All</option>
+					<option value="1">To Process</option>
+					<option value="2">To Ship</option>
+					<option value="3">Shipping</option>
+					<option value="4">Cancelled</option>
+					<option value="5">Delivered</option>
+				</select>
+			</div>
+		</form>
+		<table class="admin-list">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Name</th>
+					<th>Date</th>
+					<th>Billing Address</th>
+					<th>Total Price</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="id"><a href="/orders/show/1">1</a></td>
+					<td>Bob</td>
+					<td>16/12/2222</td>
+					<td>123 something streeet something address</td>
+					<td>$125.23</td>
+					<td>
+						<form action="/orders/edit/1">
+							<select name="status" class="order-edit-status btn btn-md btn-outline-secondary">
+								<option value="1">To Process</option>
+								<option value="2">To Ship</option>
+								<option value="3">Shipping</option>
+								<option value="4">Cancelled</option>
+								<option value="5">Delivered</option>
+							</select>
+						</form>
+					</td>
+				</tr>
+				<tr>
+					<td class="id"><a href="/orders/show/1">1</a></td>
+					<td>Bob</td>
+					<td>16/12/2222</td>
+					<td>123 something streeet something address</td>
+					<td>$125.23</td>
+					<td>
+						<form action="/orders/edit/1">
+							<select name="status" class="order-edit-status btn btn-md btn-outline-secondary">
+								<option value="1">To Process</option>
+								<option value="2">To Ship</option>
+								<option value="3">Shipping</option>
+								<option value="4">Cancelled</option>
+								<option value="5">Delivered</option>
+							</select>
+						</form>
+					</td>
+				</tr>
+				<tr>
+					<td class="id"><a href="/orders/show/1">1</a></td>
+					<td>Bob</td>
+					<td>16/12/2222</td>
+					<td>123 something streeet something address</td>
+					<td>$125.23</td>
+					<td>
+						<form action="/orders/edit/1">
+							<select name="status" class="order-edit-status btn btn-md btn-outline-secondary">
+								<option value="1">To Process</option>
+								<option value="2">To Ship</option>
+								<option value="3">Shipping</option>
+								<option value="4">Cancelled</option>
+								<option value="5">Delivered</option>
+							</select>
+						</form>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</main>
+	<footer>
+	</footer>
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title></title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../../assets/css/jquery-ui.css" />
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/jquery-ui.min.js"></script>
+	<script src="../../assets/js/script.js"></script>
+	<link href="../../assets/css/style.css" rel="stylesheet">
+	<link href="../../assets/css/util.css" rel="stylesheet">
+</head>
+<body>
+	<div class="notif-message">
+		Test Message
+	</div>
+	<nav class="admin-nav">
+		<a class="nav-logo" href="../orders/list.html">
+			SLAP<strong>SHTICK</strong>
+		</a><!--
+		--><div class="nav-links">
+			<a class="nav-link" href="../orders/list.html">Orders</a>
+			<a class="nav-link" href="../products/list.html">Products</a>
+		</div>
+		<a href="../../users/login.html" class="admin-logout">Logout</a>
+	</nav><!--
+	--><main class="admin-container">
+		<div class="modal-container hidden" id="modalContainer">
+			<div id="modal" class="modal">
+			</div>
+		</div>
+		<form class="order-header" action="/orders/filter">
+			<div class="admin-search">
+				<div class="order-search">
+					<input type="text" name="search" placeholder="Search" class="input-search btn-outline-secondary" />
+					<svg class="search-btn" id="orderSearchBtn" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M14.5 14.5l-4-4m-4 2a6 6 0 110-12 6 6 0 010 12z"></path>
+					</svg>
+				</div>
+			</div><!--
+			--><div class="admin-misc">
+				<span id="addProductBtn" class="btn btn-md btn-outline-secondary">Add a New Product</span>
+			</div>
+		</form>
+		<table class="admin-list">
+			<thead>
+				<tr>
+					<th>Picture</th>
+					<th class="id">ID</th>
+					<th>Name</th>
+					<th>Inventory Count</th>
+					<th>Product Sold</th>
+					<th>Price</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="text-center"><img src="" alt="" class="product-image"/></td>
+					<td class="text-center">1</td>
+					<td>Test Product 1</td>
+					<td>12</td>
+					<td>23</td>
+					<td>42.2</td>
+					<td>
+						<span class="btn btn-md btn-outline-secondary product-edit" data-id="7">Edit</span>
+						<span class="btn btn-md btn-outline-error product-remove" data-id="7">Remove</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="text-center"><img src="" alt="" class="product-image"/></td>
+					<td class="text-center">1</td>
+					<td>test product 1</td>
+					<td>12</td>
+					<td>23</td>
+					<td>42.2</td>
+					<td>
+						<span class="btn btn-md btn-outline-secondary product-edit" data-id="9">edit</span>
+						<span class="btn btn-md btn-outline-error product-remove" data-id="9">remove</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</main>
+	<footer>
+	</footer>
+</body>
+</html>

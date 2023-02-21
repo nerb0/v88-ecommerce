@@ -44,7 +44,10 @@ class Product extends CI_Model {
 		"main_image" => [
 			"field" => "main_image",
 			"label" => "Main Image",
-			"rules" => "required",
+			"rules" => "required|callback_valid_main_image",
+			"errors" => [
+				"valid_main_image" => "{field} is invalid."
+			]
 		],
 		// "images" => [
 		// 	"field" => "images",
@@ -71,7 +74,12 @@ class Product extends CI_Model {
 	}
 
 	public function get_by_id($product_id) {
-		$query = "SELECT * FROM users WHERE id = ?";
+		$query = "SELECT products.*
+					, SUM(JSON_EXTRACT(bought_products, CONCAT('$.\"', products.id,'\".quantity'))) as sold
+					FROM products LEFT JOIN orders
+						ON JSON_SEARCH(JSON_KEYS(bought_products), 'one', products.id) IS NOT NULL
+						WHERE products.id = ?
+						GROUP BY products.id";
 		return $this->db->query($query, [$product_id])->row_array();
 	}
 
@@ -107,8 +115,13 @@ class Product extends CI_Model {
 	}
 
 	public function upload_images($product_id, $main_image, $existing_image = []) {
-		$base_dir = "/assets/img/products/". bin2hex("product{$product_id}");
+		$base_dir = "assets/img/products/". bin2hex("product{$product_id}");
 		if (!file_exists($base_dir)) mkdir($base_dir);
+		$UPLOAD_CONFIG = [
+			"upload_path" => "{$base_dir}",
+			"allowed_types" => 'jpg|jpeg|png|gif',
+		];
+		$this->load->library("upload", $UPLOAD_CONFIG);
 
 		$uploaded_images = [];
 		for($i = 0; $i < count($_FILES["new_images"]["name"]); $i++) {
@@ -121,9 +134,9 @@ class Product extends CI_Model {
 				$target_name = "{$filename}.{$file_ext}";
 			}
 
-			// NOTE: CodeIgniter only reads from the global variable $_FILES when uploading file
+			// NOTE: CodeIgniter `upload` library only reads from the global variable $_FILES when uploading file
 			// CodeIgniter's `do_upload` method does not accept a custom variable
-			// hence, manually insert each value of $_FILES to another key inside $_FILES
+			// hence, manually inserting each value of $_FILES to another key inside $_FILES seems to be the only way
 			$_FILES["new_image"] = [
 				"name" => $target_name,
 				"type" => $_FILES["new_images"]["type"][$i],
@@ -131,20 +144,16 @@ class Product extends CI_Model {
 				"error" => $_FILES["new_images"]["error"][$i],
 				"size" => $_FILES["new_images"]["size"][$i],
 			];
-			$UPLOAD_CONFIG = [
-				// NOTE: The additional dot is there since codeigniter's upload_path already reads from the
-				// root workspace folder while the path for the images loaded in HTML is based on the current route
-				"upload_path" => ".{$base_dir}",
-				"allowed_types" => 'jpg|jpeg|png|gif',
-			];
-			$this->load->library("upload", $UPLOAD_CONFIG);
 			if ($this->upload->do_upload("new_image")) {
-				if (ctype_digit(strval($main_image)) && $main_image == $i) $uploaded_images["main"] = "{$base_dir}/{$target_name}";
-				else $uploaded_images["sub"][] = "{$base_dir}/{$target_name}";
+				// NOTE: The additional "/" symbol is there since the "src" tag from images			This symbol
+				// is based on the current route not the BASEPATH/root directory of CodeIgniter	  	   ↓
+				if (ctype_digit(strval($main_image)) && $main_image == $i) $uploaded_images["main"] = "/{$base_dir}/{$target_name}";
+				else $uploaded_images["sub"][] = "/{$base_dir}/{$target_name}";
 			}
 		}
 
 		foreach ($existing_image as $image_url) {
+			// NOTE: This is a workaround for checking if the string is an integer since is_int() does not seem to work
 			if (!ctype_digit(strval($main_image)) && $image_url == $main_image) $uploaded_images["main"] = $image_url;
 		}
 		$query = "UPDATE products SET images = ? WHERE id = ?";

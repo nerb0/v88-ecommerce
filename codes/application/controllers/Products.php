@@ -70,6 +70,7 @@ class Products extends CI_Controller {
 
 	public function edit() {
 		var_dump($this->input->post(null, true));
+		$result = $this->Product->validate();
 		var_dump($_FILES);
 	}
 	public function add() {
@@ -94,8 +95,13 @@ class Products extends CI_Controller {
 	}
 
 	public function edit_html($product_id) {
+		$product = $this->Product->get_by_id($product_id);
+		$product["images"] = json_decode($product["images"], true);
 		echo json_encode([
-			"response" => $this->load->view("__partials/edit_product", ["id" => $product_id], true),
+			"response" => $this->load->view("__partials/edit_product", [
+				"product" => $product,
+				"categories" => $this->Category->get_all(),
+			], true),
 		]);
 	}
 	public function add_html() {
@@ -106,10 +112,11 @@ class Products extends CI_Controller {
 		]);
 	}
 
-	// NOTE: FORM VALIDATION's CUSTOM CALLBACK FUNCTIONS
+	// FORM VALIDATION's CUSTOM CALLBACK FUNCTIONS
 	// The functions below are for form_validation
 	// Additionally, all of the functions below are removed from the route
 	public function valid_category($category_id) {
+		// NOTE: This line is necessary for not overriding the require callback from CodeIgniter
 		if (strlen($category_id) == 0) return true;
 		// Check if the selected category id exists in the database
 		return !empty($this->Category->get_by_id($category_id));
@@ -129,11 +136,21 @@ class Products extends CI_Controller {
 		// Check if the new category name does not exists in the database
 		return empty($this->Category->get_by_name($category_name));
 	}
+	public function valid_main_image($main_image) {
+		if (strlen($main_image) == 0) return true;
+
+		if (ctype_digit(strval($main_image))) {
+			return $main_image < count($_FILES["new_images"]["name"]);
+		} else {
+			return in_array($main_image, $this->input->post("images", true));
+		}
+	}
 	public function valid_new_images() {
 		if (empty($_FILES["new_images"])) return true;
 
 		for($i = 0; $i < count($_FILES["new_images"]["name"]); $i++ ){
 			if ($_FILES["new_images"]["error"][$i] != 0) return false;
+			// NOTE: Only this 4 file types will be allowed
 			if (!in_array(get_extension($_FILES["new_images"]["name"][$i]), ["jpg", "png", "jpeg", "gif"])) return false;
 		}
 		return true;

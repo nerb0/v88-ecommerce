@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title></title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<script src="../assets/js/jquery.min.js"></script>
+	<script src="../assets/js/script.js"></script>
+	<link href="../assets/css/style.css" rel="stylesheet" />
+	<link href="../assets/css/util.css" rel="stylesheet" />
+</head>
+
+<body>
+	<main class="center-container h-screen w-screen relative">
+		<p class="index-header">SLAP<strong>SHTICK</strong></p>
+		<form action="/users/process_register" method="post">
+			<div class="user-form register-form mx-auto shadow-lg">
+				<div class="input-group">
+					<label class="input-default" style="--label: 'First Name'">
+						<input type="text" name="first_name" /> </label><!--
+					--><label class="input input-default" style="--label: 'Last Name'">
+						<input type="text" name="last_name" />
+					</label>
+				</div>
+				<label class="input-default" style="--label: 'Email Address'">
+					<input type="text" name="email" />
+				</label>
+				<label class="input-default input-password" style="--label: 'Password'">
+					<input type="password" name="password" />
+					<span id="passwordToggle"></span>
+				</label>
+				<label class="input-default input-password" style="--label: 'Confirm Password'">
+					<input type="password" name="confirm_password" />
+					<span id="passwordToggle"></span>
+				</label>
+				<div class="light-effect-container mt-xl">
+					<span id="lightEffect" class="light-effect" style="--radius: 600px"></span>
+					<input type="submit" value="Register" class="btn btn-xl btn-sharp btn-outline-primary btn-span" />
+				</div>
+			</div>
+		</form>
+	</main>
+</body>
+
+</html>
