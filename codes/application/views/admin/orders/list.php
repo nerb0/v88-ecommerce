@@ -1,8 +1,7 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 	$total = 0;
 	?>
-		<form class="order-header" action="/orders/filter">
-			<input type="hidden" value="<?= $this->security->get_csrf_hash() ?>" name="<?= $this->security->get_csrf_token_name() ?>" />
+		<form class="admin-header" data-field="orders">
 			<div class="admin-search">
 				<div class="order-search">
 					<input type="text" name="search" placeholder="Search" class="input-search btn-outline-secondary" />
@@ -12,20 +11,16 @@
 				</div>
 			</div><!--
 			--><div class="admin-misc">
-				<select name="filter" id="filterOrder" class="btn btn-md btn-outline-secondary">
+				<select name="status" id="filterOrder" class="btn btn-md btn-outline-secondary">
 					<option value="0">All</option>
-<?php			foreach ($statuses as $id => $status) {
+<?php			foreach ($statuses as $status) {
 					$is_selected =  (false) ? "selected" : ""; ?>
-					<option <?= $is_selected ?> value="<?= $id + 1?>"><?= $status ?></option>
+					<option <?= $is_selected ?> value="<?= $status ?>"><?= $status ?></option>
 <?php			} ?>
 				</select>
 			</div>
 		</form>
-		<div id="orderList" class="order-list-container"></div>
-		<div class="text-center">
-<?php	for($i = 1; $i <= $total_pages; $i++) {
-			$active = ($i == 1) ? "active" : "";
-?>
-			<span class="order-page-btn <?= $active ?>" id="<?= $i ?>"><?= $i ?></span>
-<?php } ?>
+		<div id="adminList" class="admin-list-container">
+		</div>
+		<div class="text-center" id="adminPagination">
 		</div>

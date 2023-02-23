@@ -11,9 +11,10 @@ class Category extends CI_Model {
 		return $this->db->query($query, [$category_id])->row_array();
 	}
 
-	public function get_all() {
-		$query = "SELECT * FROM categories";
-		return $this->db->query($query)->result_array();
+	public function get_all($limit = 0) {
+		$limit_query = (!empty($limit)) ? "LIMIT ?" : "";
+		$query = "SELECT * FROM categories {$limit_query}";
+		return $this->db->query($query, [$limit])->result_array();
 	}
 
 	public function create($category_name) {

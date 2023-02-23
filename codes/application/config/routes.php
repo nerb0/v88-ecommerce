@@ -57,14 +57,17 @@ $route["home"] = "users";
 $route["login"] = "users/login";
 $route["logout"] = "users/logout";
 $route["register"] = "users/register";
-$route["users/login"] = "404";
-$route["users/logout"] = "404";
-$route["users/register"] = "404";
+
+$route["products/(:num)/review"] = "reviews/create/$1";
+$route["reviews/(:num)/reply"] = "replies/create/$1";
 
 $route["cart"] = "cart-Items";
+$route["cart/add"] = "cart-Items/add";
+$route["cart/edit/(:num)"] = "cart-Items/edit/$1";
+$route["cart/remove/(:num)"] = "cart-Items/remove/$1";
+$route["cart/validate_checkout"] = "cart-Items/validate_checkout";
 $route["cart/checkout"] = "cart-Items/checkout";
-$route["cart-Items/checkout"] = "404";
-$route["cart-Items"] = "404";
+$route["cart/process_checkout"] = "cart-Items/process_checkout";
 
 $route["admin/products"] = "products/list";
 $route["admin/products/add"] = "products/list";
@@ -72,11 +75,23 @@ $route["admin/orders"] = "orders/list";
 $route["admin/orders/show/(:num)"] = "orders/show/$1";
 
 // NOTE: Routes for API Endpoints
+$route["api/json/cart/total"] = "cart-Items/total";
+$route["api/html/cart/list"] = "cart-Items/list_html";
+$route["api/html/cart/remove/(:num)"] = "cart-Items/remove_html/$1";
 $route["api/html/products/edit/(:num)"] = "products/edit_html/$1";
 $route["api/html/products/remove/(:num)"] = "products/remove_html/$1";
 $route["api/html/products/add"] = "products/add_html";
+$route["api/html/products/get/page/(:num)"] = "products/list_html/$1";
+$route["api/html/products/catalog/get/page/(:num)"] = "products/catalog_html/$1";
 $route["api/html/orders/get/page/(:num)"] = "orders/list_html/$1";
+$route["api/html/user/address/default/(:num)"] = "users/set_default_address/$1";
+$route["api/html/user/address/list/"] = "users/list_addresses/";
 
+$route["users/login"] = "404";
+$route["users/logout"] = "404";
+$route["users/register"] = "404";
+$route["cart-Items/checkout"] = "404";
+$route["cart-Items"] = "404";
 $route["products/list"] = "404";
 $route["orders/list"] = "404";
 $route["orders/show/(:any)"] = "404";

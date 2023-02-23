@@ -90,12 +90,12 @@ body {
 	fill: white;
 }
 .input-group > * {
-	width: calc(50% - 20px);
+	width: calc(50% - 5px);
 	display: inline-block;
 	box-sizing: border-box;
 }
 .input-group > *:not(:last-child) {
-	margin-right: 20px;
+	margin-right: 10px;
 }
 .input-checkbox {
 	display: block;
@@ -168,6 +168,19 @@ body {
 .btn-outline-secondary:hover {
 	background-color: transparent;
 	color: var(--secondary);
+	transition: background-color 0.15s ease-in,
+			color 0.15s ease-in;
+}
+.btn-outline-secondary-dark {
+	border: 1px solid var(--secondary-dark);
+	background-color: var(--secondary-dark);
+	color: var(--secondary);
+	transition: background-color 0.15s ease-out,
+			color 0.15s ease-out;
+}
+.btn-outline-secondary-dark:hover {
+	background-color: transparent;
+	color: var(--secondary-dark);
 	transition: background-color 0.15s ease-in,
 			color 0.15s ease-in;
 }
@@ -488,15 +501,19 @@ body {
 }
 
 .notif-message {
-	position: absolute;
+	position: fixed;
 	z-index: 10000;
 	top: 25px;
 	right: 25px;
 	padding: 15px;
 	width: 300px;
-	background-color: var(--secondary-dark);
+	background-color: var(--secondary);
+	color: var(--secondary-dark);
 	animation: slide-in-out 5s ease-in-out forwards;
 	border-radius: 5px;
+}
+.notif-message * {
+	color: var(--secondary-dark);
 }
 .error {
 	background-color: var(--admin-nav-primary);
@@ -609,9 +626,6 @@ body {
 .featured-products {
 	padding: 50px 25px;
 	background-color: var(--secondary-dark);
-}
-.product-list {
-	padding: 50px 0;
 }
 .product-card {
 	position: relative;
@@ -809,14 +823,14 @@ body {
 	background: transparent;
 	border: 1px solid var(--primary-light);
 }
-.catalog-search-page > input.active {
+.catalog-page-btn.active {
 	pointer-events: none;
 	color: var(--primary-light);
 }
-.catalog-search-page > input:not():hover {
+.catalog-page-btn:hover {
 	color: var(--primary-light);
 }
-.catalog-search-page > input:not(:last-child) {
+.catalog-page-btn:not(:last-child) {
 	margin-right: 5px;
 }
 .catalog-container > * {
@@ -829,7 +843,7 @@ body {
 	box-sizing: border-box;
 	padding: 25px 15px;
 }
-.catalog-container > .product-list {
+.catalog-container > .catalog-list {
 	box-sizing: border-box;
 	padding: 15px 25px;
 	margin-left: 0.5%;
@@ -858,6 +872,13 @@ body {
 	padding: 5px;
 	font-size: 14px;
 	color: var(--secondary)
+}
+.catalog-bottom-page {
+	margin-left: 20%;
+	width: 80%;
+	padding: 15px 0; 
+	box-sizing: border-box;
+	text-align: center;
 }
 
 .product-sidebar {
@@ -931,6 +952,7 @@ body {
 .product-image-sub > * {
 	display: inline-block;
 	background-color: var(--primary-light);
+	object-fit: cover;
 	width: 90px;
 	height: 100%;
 }
@@ -1220,6 +1242,18 @@ body {
 	border-top: 2px solid var(--secondary);
 	margin-top: 5px;
 }
+.checkout-address > * {
+	width: calc(50% - 15px);
+	display: inline-block;
+	vertical-align: top;
+}
+.checkout-address > :first-child {
+	margin-right: 15px;
+}
+.checkout-address > :last-child {
+	padding-left: 14px;
+	border-left: 1px solid var(--primary-soft);
+}
 
 .billing-same-btn {
 	cursor: pointer;
@@ -1227,16 +1261,19 @@ body {
 	display: inline-block;
 }
 .billing-card-info > * {
+	width: 100%;
+}
+.billing-card-info > * {
 	display: inline-block;
 }
 .billing-card-info > .card-number {
-	width: 800px;
+	width: 70%;
 }
 .billing-card-info > .card-cvc {
-	width: 100px;
+	width: 15%;
 }
 .billing-card-info > .card-expiry {
-	width: 100px;
+	width: 15%;
 }
 .order-bill-detail {
 	margin-top: 15px;
@@ -1481,25 +1518,54 @@ body {
 .order-item-body {
 	overflow: scroll;
 }
-.order-page-btn {
+.order-description { 
+	margin-top: 20px;
+}
+.order-description > * { 
+	vertical-align: top;
+}
+.order-status-form { 
+	display: inline-block;
+}
+.order-price-table { 
+	margin-left: 20px;
+	width: 300px;
+	display: inline-table;
+}
+.order-price-table td:first-child { 
+	font-weight: bold;
+	text-align: left;
+}
+.order-price-table td:last-child::before { 
+	content: "$ ";
+}
+.order-price-table td:first-child::after { 
+	content: " :";
+}
+.admin-page-btn {
+	display: inline-block;
 	padding: 5px 10px;
+	width: 20px;
 	background-color: var(--primary-light);
 	font-weight: bold;
 	color: var(--secondary-dark);
 	cursor: pointer;
 	user-select: none;
 }
-.order-page-btn.active {
+.admin-page-btn.active {
 	background-color: var(--primary-soft);
 	color: white;
 }
-.order-page-btn.active {
+.admin-page-btn.active {
 	pointer-events: none;
 }
-.order-page-btn:hover:not(.active) {
+.admin-page-btn:hover:not(.active) {
 	background-color: var(--fg-placeholder);
 	color: var(--secondary-dark)
 }
-.order-list-container {
+.admin-list-container {
 	height: 790px;
+}
+#messageBox {
+	z-index: 1000000;
 }

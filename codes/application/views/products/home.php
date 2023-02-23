@@ -2,48 +2,30 @@
 	<main class="featured-banner">
 		<div class="featured-slide-container">
 			<div class="featured-slide" id="featuredSlide">
-				<div class="featured-item-list">
-					<div class="featured-item">
-						<img src="test" alt="" class="featured-item-image"/>
-						<div class="featured-item-name">Featured Product</div>
-					</div><!--
+				<div class="featured-item-list"><!--
+<?php			for ($i = 0; $i < 3; $i++) { ?>
 					--><div class="featured-item">
-						<img src="test" alt="" class="featured-item-image"/>
-						<div class="featured-item-name">Featured Product</div>
+						<img src="<?= $banner_products[$i]["image"] ?>" alt="" class="featured-item-image"/>
+						<div class="featured-item-name"><?= $banner_products[$i]["name"] ?></div>
 					</div><!--
+<?php			} ?>
+				--></div><!--
+				--><div class="featured-item-list"><!--
+<?php			for ($i = 3; $i < 6; $i++) { ?>
 					--><div class="featured-item">
-						<img src="test" alt="" class="featured-item-image"/>
-						<div class="featured-item-name">Featured Product</div>
-					</div>
-				</div><!--
-				--><div class="featured-item-list">
-					<div class="featured-item">
-						<img src="test" alt="" class="featured-item-image"/>
-						<div class="featured-item-name">Featured Product</div>
+						<img src="<?= $banner_products[$i]["image"] ?>" alt="" class="featured-item-image"/>
+						<div class="featured-item-name"><?= $banner_products[$i]["name"] ?></div>
 					</div><!--
+<?php			} ?>
+				--></div><!--
+				--><div class="featured-item-list"><!--
+<?php			for ($i = 6; $i < 9; $i++) { ?>
 					--><div class="featured-item">
-						<img src="test" alt="" class="featured-item-image"/>
-						<div class="featured-item-name">Featured Product</div>
+						<img src="<?= $banner_products[$i]["image"] ?>" alt="" class="featured-item-image"/>
+						<div class="featured-item-name"><?= $banner_products[$i]["name"] ?></div>
 					</div><!--
-					--><div class="featured-item">
-						<img src="test" alt="" class="featured-item-image"/>
-						<div class="featured-item-name">Featured Product</div>
-					</div>
-				</div><!--
-				--><div class="featured-item-list">
-					<div class="featured-item">
-						<img src="test" alt="" class="featured-item-image"/>
-						<div class="featured-item-name">Featured Product</div>
-					</div><!--
-					--><div class="featured-item">
-						<img src="test" alt="" class="featured-item-image"/>
-						<div class="featured-item-name">Featured Product</div>
-					</div><!--
-					--><div class="featured-item">
-						<img src="test" alt="" class="featured-item-image"/>
-						<div class="featured-item-name">Featured Product</div>
-					</div>
-				</div>
+<?php			} ?>
+				--></div>
 			</div>
 		</div>
 		<div class="featured-navigation" id="featuredNav">
@@ -60,61 +42,25 @@
 	</main>
 	<div class="categories-container">
 		<h1 class="text-center">Shop by Category</h1>
-		<div class="category-list">
-			<a href="/products?category=test" class="category-card">
+		<div class="category-list"><!--
+<?php	foreach ($categories as $category) { ?>
+			--><a href="/products/catalog?category=<?= $category["id"] ?>" class="category-card">
 				<img src="" alt="" class="category-image" />
-				<p class="text-center">Category Name</p>
+				<p class="text-center"><?= $category["name"] ?></p>
 			</a><!--
-			--><a href="/products?category=test" class="category-card">
-				<img src="" alt="" class="category-image" />
-				<p class="text-center">Category Name</p>
-			</a><!--
-			--><a href="/products?category=test" class="category-card">
-				<img src="" alt="" class="category-image" />
-				<p class="text-center">Category Name</p>
-			</a><!--
-			--><a href="/products?category=test" class="category-card">
-				<img src="" alt="" class="category-image" />
-				<p class="text-center">Category Name</p>
-			</a><!--
-			--><a href="/products?category=test" class="category-card">
-				<img src="" alt="" class="category-image" />
-				<p class="text-center">Category Name</p>
-			</a>
-		</div>
+<?php	} ?>
+		--></div>
 	</div>
 	<div class="featured-products">
 		<h1 class="text-center">Featured Products</h1>
-		<div class="product-list">
-			<a href="/products/1" class="product-card">
-				<img src="" alt="" class="product-image" />
-				<p class="product-name text-center">Product Name</p>
-				<p class="product-price">$242442</p>
-				<p class="product-sold">Sold: 4242</p>
+		<div class="product-list"><!--
+<?php	foreach ($featured_products as $product) { ?>
+			--><a href="/products/show/<?= $product["id"] ?>" class="product-card">
+				<img src="<?= $product["image"] ?>" alt="" class="product-image" />
+				<p class="product-name text-center"><?= $product["name"] ?></p>
+				<p class="product-price">$ <?= number_format($product["price"], 2) ?></p>
+				<p class="product-sold">Sold: <?= $product["sold"] ?></p>
 			</a><!--
-			--><a href="/products/1" class="product-card">
-				<img src="" alt="" class="product-image" />
-				<p class="product-name text-center">Product Name</p>
-				<p class="product-price">$242442</p>
-				<p class="product-sold">Sold: 4242</p>
-			</a><!--
-			--><a href="/products/1" class="product-card">
-				<img src="" alt="" class="product-image" />
-				<p class="product-name text-center">Product Name</p>
-				<p class="product-price">$242442</p>
-				<p class="product-sold">Sold: 4242</p>
-			</a><!--
-			--><a href="/products/1" class="product-card">
-				<img src="" alt="" class="product-image" />
-				<p class="product-name text-center">Product Name</p>
-				<p class="product-price">$242442</p>
-				<p class="product-sold">Sold: 4242</p>
-			</a><!--
-			--><a href="/products/1" class="product-card">
-				<img src="" alt="" class="product-image" />
-				<p class="product-name text-center">Product Name</p>
-				<p class="product-price">$242442</p>
-				<p class="product-sold">Sold: 4242</p>
-			</a>
-		</div>
+<?php	} ?>
+		--></div>
 	</div>

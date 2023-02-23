@@ -1,8 +1,21 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Product extends CI_Model {
-	const ERRORS = [
-
+	const ADMIN_ROW_LIMIT = 8;
+	const ROW_LIMIT = 20;
+	const ORDER = [
+		"sold ASC",
+		"sold DESC",
+		"products.price ASC",
+		"products.price DESC",
+		"products.name ASC",
+		"products.name DESC",
+		"products.id ASC",
+		"products.id DESC",
+		"products.created_at ASC",
+		"products.created_at DESC",
+		"products.updated_at ASC",
+		"products.updated_at DESC",
 	];
 	const RULES = [
 		"name" => [
@@ -64,32 +77,106 @@ class Product extends CI_Model {
 		],
 	];
 
-	public function get_all($page = 0) {
+	public function get($filter = []) {
+		$values = [];
+		$conditions = [];
+		if (!empty($filter["search"])) {
+			$conditions[] = "products.name LIKE ?";
+			$values[] = "%{$filter["search"]}%";
+		}
+		if (!empty($filter["category"])) {
+			$conditions[] = "category_id IN ?";
+			$values[] = $filter["category"];
+		}
+		if (!empty($filter["min_price"])) {
+			$conditions[] = "price >= ?";
+			$values[] = $filter["min_price"];
+		}
+		if (!empty($filter["max_price"])) {
+			$conditions[] = "price <= ?";
+			$values[] = $filter["max_price"];
+		}
+		$where =(!empty($conditions)) ? "WHERE " . implode(" AND ", $conditions) : "";
 		$query = "SELECT products.*
-					, SUM(JSON_EXTRACT(bought_products, CONCAT('$.\"', products.id,'\".quantity'))) as sold
+					, SUM(JSON_EXTRACT(order_items, CONCAT('$.\"', products.id,'\".quantity'))) as sold
 					FROM products LEFT JOIN orders
-						ON JSON_SEARCH(JSON_KEYS(bought_products), 'one', products.id) IS NOT NULL
-						GROUP BY products.id";
-		return $this->db->query($query, [$page])->result_array();
+						ON JSON_SEARCH(JSON_KEYS(order_items), 'one', products.id) IS NOT NULL
+						{$where} GROUP BY products.id";
+		return $this->db->query($query, $values)->result_array();
+	}
+	
+	public function get_total_pages() {
+		$query = "SELECT * FROM products";
+		$result = $this->db->query($query)->result_array();
+		return ceil(count($result) / self::ADMIN_ROW_LIMIT);
 	}
 
-	public function delete($product_id) {
-		$query = "DELETE FROM products WHERE id = ?";
-		return $this->db->query($query, [$product_id]);
+	public function exists($product_id) {
+		$query = "SELECT * FROM products WHERE id = ?";
+		return !empty($this->db->query($query, [$product_id])->row_array());
 	}
 
 	public function get_by_id($product_id) {
 		$query = "SELECT products.*
-					, SUM(JSON_EXTRACT(bought_products, CONCAT('$.\"', products.id,'\".quantity'))) as sold
+					,categories.name as category_name
+					,SUM(JSON_EXTRACT(order_items, CONCAT('$.\"', products.id,'\".quantity'))) as sold
 					FROM products LEFT JOIN orders
-						ON JSON_SEARCH(JSON_KEYS(bought_products), 'one', products.id) IS NOT NULL
-						WHERE products.id = ?
-						GROUP BY products.id";
+						ON JSON_SEARCH(JSON_KEYS(order_items), 'one', products.id) IS NOT NULL
+					INNER JOIN categories
+						ON categories.id = category_id
+					WHERE products.id = ?
+					GROUP BY products.id";
 		return $this->db->query($query, [$product_id])->row_array();
 	}
 
+	public function get_featured() {
+		$order = self::ORDER[random_int(0, count(self::ORDER) - 1)];
+		$query = "SELECT products.*
+					,images->>\"$.main\" as image
+					,categories.name as category_name
+					,SUM(JSON_EXTRACT(order_items, CONCAT('$.\"', products.id,'\".quantity'))) as sold
+					FROM products LEFT JOIN orders
+						ON JSON_SEARCH(JSON_KEYS(order_items), 'one', products.id) IS NOT NULL
+					INNER JOIN categories
+						ON categories.id = category_id
+					GROUP BY products.id
+					ORDER BY {$order} LIMIT 5";
+		return $this->db->query($query)->result_array();
+	}
+
+	public function get_banner() {
+		$order = self::ORDER[1];
+		$query = "SELECT products.*
+					,images->>\"$.main\" as image
+					,categories.name as category_name
+					,SUM(JSON_EXTRACT(order_items, CONCAT('$.\"', products.id,'\".quantity'))) as sold
+					FROM products LEFT JOIN orders
+						ON JSON_SEARCH(JSON_KEYS(order_items), 'one', products.id) IS NOT NULL
+					INNER JOIN categories
+						ON categories.id = category_id
+					GROUP BY products.id
+					ORDER BY {$order} LIMIT 9";
+		return $this->db->query($query)->result_array();
+	}
+
+	public function get_similar($category_id, $product_id) {
+		$order = self::ORDER[random_int(0, count(self::ORDER) - 1)];
+		$query = "SELECT products.*
+					,images->>\"$.main\" as image
+					,categories.name as category_name
+					,SUM(JSON_EXTRACT(order_items, CONCAT('$.\"', products.id,'\".quantity'))) as sold
+					FROM products LEFT JOIN orders
+						ON JSON_SEARCH(JSON_KEYS(order_items), 'one', products.id) IS NOT NULL
+					INNER JOIN categories
+						ON categories.id = category_id
+					WHERE category_id = ? AND NOT products.id = ?
+					GROUP BY products.id
+					ORDER BY {$order} LIMIT 5";
+		return $this->db->query($query, [$category_id, $product_id])->result_array();
+	}
+
 	public function create($product) {
-		$query = "INSERT INTO products(name, description, price, quantity, category_id) VALUES(?,?,?,?,?)";
+		$query = "INSERT INTO products(name, description, price, stock, category_id) VALUES(?,?,?,?,?)";
 		$result = $this->db->query($query, [
 			$product["name"],
 			$product["description"],
@@ -100,8 +187,22 @@ class Product extends CI_Model {
 		return $this->db->insert_id();
 	}
 
+	public function delete($product_id) {
+		$query = "DELETE FROM products WHERE id = ?";
+		$folder = bin2hex("product{$product_id}");
+		rmdir("assets/img/products/{$folder}");
+		return $this->db->query($query, [$product_id]);
+	}
+
 	public function update($product_id, $product) {
-		$query = "UPDATE products SET name = ?, description = ?, price = ?, quantity = ?, category_id = ? WHERE id = ?";
+		$query = "UPDATE products SET
+					name = ?,
+					description = ?,
+					price = ?,
+					stock = ?,
+					category_id = ?,
+					updated_at = NOW()
+						WHERE id = ?";
 		$result = $this->db->query($query, [
 			$product["name"],
 			$product["description"],
@@ -162,7 +263,6 @@ class Product extends CI_Model {
 					$filename = bin2hex("image{$file_count}");
 					$target_name = "{$filename}.{$file_ext}";
 				}
-
 				// NOTE: CodeIgniter `upload` library only reads from the global variable $_FILES when uploading file
 				// CodeIgniter's `do_upload` method does not accept a custom variable
 				// hence, manually inserting each value of $_FILES to another key inside $_FILES seems to be the only way

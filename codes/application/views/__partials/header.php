@@ -7,8 +7,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="/assets/js/jquery.min.js"></script>
 	<script src="/assets/js/script.js"></script>
+<?php foreach($include["js"] as $script) { ?>
+	<script src="/assets/js/<?= $script ?>.js"></script>
+<?php } ?>
 	<link href="/assets/css/style.css" rel="stylesheet">
 	<link href="/assets/css/util.css" rel="stylesheet">
+<?php foreach($include["css"] as $style) { ?>
+	<link href="/assets/css/<?= $style ?>.css" rel="stylesheet">
+<?php } ?>
 </head>
 <body>
 <?php if (!empty($links)) { ?>
@@ -51,7 +57,7 @@
 			<a class="nav-cart" href="/cart">
 				<svg class="cart-icon" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
 					<path d="M.5.5l.6 2m0 0l2.4 8h11v-6a2 2 0 00-2-2H1.1zm11.4 12a1 1 0 110-2 1 1 0 010 2zm-8-1a1 1 0 112 0 1 1 0 01-2 0z"></path>
-					<div class="cart-count">12</div>
+					<div class="cart-count" id="cartCount"><?= $cart_count ?></div>
 				</svg>
 			</a>
 		</div>
@@ -62,3 +68,9 @@
 		<?= $message ?>
 	</div>
 <?php } ?>
+	<div class="modal-container hidden" id="modalContainer">
+		<div id="modal" class="modal">
+		</div>
+	</div>
+	<div id="messageBox" class="hidden">
+	</div>

@@ -1,11 +1,33 @@
-// import "./jquery.min.js";
-// import "./jquery-ui.min.js";
+const refreshToken = (newToken) => {
+	$("input[name='csrf_test_name']").val(newToken);
+};
+const createMessage = (content, type) => {
+	const messageBox = $("#messageBox");
+	messageBox.removeClass("notif-message");
+	messageBox.removeClass("error");
+	messageBox.addClass("hidden");
+	setTimeout(()=> {
+		messageBox.html(content);
+		messageBox.removeClass("hidden");
+		messageBox.addClass(`notif-message ${type}`);
+	}, 500);
+};
+const openModal = (content) => {
+	$("body").addClass("overflow-hidden");
+	$("#modalContainer").removeClass("hidden");
+	$("#modal").html(content);
+};
+const closeModal = () => {
+	$("body").removeClass("overflow-hidden");
+	$("#modalContainer").addClass("hidden");
+	$("#modal").html("");
+};
 
-$(document).ready(function () {
+$(document).ready(function() {
 	$(document).on(
 		"change keyup keydown",
 		".input-default > input, .input-default > textarea",
-		function (e) {
+		function(e) {
 			if ($(this).val()) {
 				$(this).parent().addClass("has-value");
 			} else {
@@ -14,7 +36,7 @@ $(document).ready(function () {
 		}
 	);
 
-	$(".light-effect-container").mouseout(function (e) {
+	$(".light-effect-container").mouseout(function(e) {
 		const lightEffect = $(this).find("span#lightEffect")["0"];
 		const { offsetX, offsetY } = e;
 		$(lightEffect).addClass("light-hidden");
@@ -25,7 +47,7 @@ $(document).ready(function () {
 			--radius: ${lightEffect.offsetHeight}px`
 		);
 	});
-	$(".light-effect-container").mousemove(function (e) {
+	$(".light-effect-container").mousemove(function(e) {
 		const lightEffect = $(this).find("span#lightEffect")["0"];
 		const { offsetX, offsetY } = e;
 		$(lightEffect).removeClass("light-hidden");
@@ -44,7 +66,7 @@ $(document).ready(function () {
 	$(".input-password > span#passwordToggle")
 		.attr("data-state", "closed")
 		.html(passwordClose)
-		.click(function (e) {
+		.click(function(e) {
 			e.stopPropagation();
 			if ($(this).attr("data-state") == "closed") {
 				$(this.previousElementSibling).attr("type", "text");
@@ -57,14 +79,14 @@ $(document).ready(function () {
 			}
 		});
 
-	$(document).click(function (e) {
+	$(document).click(function(e) {
 		if (e.target.className != "dropdown") {
 			const button = $(this).find(".dropdown-toggle-btn")["0"];
 			$(button).addClass("dropdown-toggle-closed");
 			$(".dropdown-list").addClass("transparent");
 		}
 	});
-	$(".dropdown-toggle").click(function (e) {
+	$(".dropdown-toggle").click(function(e) {
 		e.stopPropagation();
 		const button = $(this).find(".dropdown-toggle-btn")["0"];
 		if ($(button).hasClass("dropdown-toggle-closed")) {
@@ -77,43 +99,36 @@ $(document).ready(function () {
 	});
 
 	const featuredSlide = document.getElementById("featuredSlide");
-	$(document).on("click", ".featured-btn:not(.selected)", function (e) {
+	$(document).on("click", ".featured-btn:not(.selected)", function(e) {
 		const index = $(this).attr("data-index");
 		$(this).siblings().removeClass("selected");
 		$(this).addClass("selected");
 		$(featuredSlide).attr("style", `transform: translateX(-${100 * index}%)`);
 	});
 
-	$("#changePasswordToggle").click(function (e) {
+	$("#changePasswordToggle").click(function(e) {
 		const fieldset = $(this).siblings("fieldset");
 		if (fieldset.attr("disabled")) {
 			fieldset.removeAttr("disabled");
 			fieldset.removeClass("hidden");
-			fieldset.find("[name='change_password']").val("1");
+			$("input[name='change_password']").val("1");
 		} else {
 			fieldset.attr("disabled", "disabled");
 			fieldset.addClass("hidden");
-			fieldset.find("[name='change_password']").val("0");
+			$("input[name='change_password']").val("0");
 		}
 	});
 
-	const cartSelectAll = document.getElementById("cartSelectAll");
-	$(cartSelectAll).change(function (e) {
-		if (this.checked) {
-			$("#userCart input[type='checkbox']").prop("checked", "true");
-		} else {
-			$("#userCart input[type='checkbox']").prop("checked", "");
-		}
+	$(document).on("click", ".modal-close", function(e) {
+		closeModal();
 	});
 
-	const setSameBillingBtn = document.getElementById("setSameBillingBtn");
-	$(setSameBillingBtn).change(function (e) {
-		if (this.checked) {
-			$("#billingAddressForm").addClass("hidden");
-		} else {
-			$("#billingAddressForm").removeClass("hidden");
-		}
-	});
+	$(document).on("click", ".shipping-card", function(e) {
+		const id = this.id;
+		$.get(`/api/html/user/address/${id}`, function(res) {
+			console.log(res);
+		})
+	})
 
 	// NOTE: This is for disabling sibling checkbox from selecting the main image
 	// Decided to use radio box since the logic already is applicable to radio boxes
@@ -134,146 +149,4 @@ $(document).ready(function () {
 	// 			.removeAttr("disabled");
 	// 	}
 	// });
-
-	const body = $("body");
-	const modalContainer = $("#modalContainer");
-	const modal = $("#modal");
-	let uploadCounter = 0;
-	const openModal = (content) => {
-		body.addClass("overflow-hidden");
-		modalContainer.removeClass("hidden");
-		modal.html(content);
-
-		$("#editImageList").sortable({
-			placeholder: "edit-image-placeholder",
-			handle: ".edit-image-drag",
-			update: function (e) {
-				let oldImageIndex = 0;
-				let newImageIndex = 0;
-				let imageSortedIndex = {};
-				$(".edit-image-set-main").each(function (index) {
-					if ($(this).hasClass("edit-new-image")) {
-						$(this).attr("value", newImageIndex);
-						$(this).attr("id", newImageIndex);
-						$(this).parent("label").attr("for", newImageIndex);
-						if (!this.checked)
-							imageSortedIndex[index] = { new: newImageIndex++ };
-					} else if (!this.checked) imageSortedIndex[index] = { old: oldImageIndex++ };
-				});
-				$("#imageSort").prop("value", JSON.stringify(imageSortedIndex));
-				// $(".edit-new-image").each(function (index) {
-				// 	$(this).attr("value", index);
-				// 	$(this).attr("id", index);
-				// 	$(this).parent("label").attr("for", index);
-				// });
-			},
-		});
-
-		// NOTE: Reset the count for the estimated id of the upload files
-		// Applies to both product EDIT and ADD
-		uploadCounter = 0;
-	};
-	$(document).on("click", ".modal-close", function (e) {
-		body.removeClass("overflow-hidden");
-		modalContainer.addClass("hidden");
-		modal.html("");
-
-		// NOTE: Remove all locally stored files once the modal is closed,
-		// Applies to both product EDIT and ADD
-		uploadCounter = 0;
-	});
-
-	$(document).on("click", ".admin-action", function (e) {
-		const id = $(this).attr("data-product-id") || "";
-		const url = $(this).attr("data-url");
-		$.get(
-			`${url}/${id}`,
-			function (res) {
-				openModal(res.response);
-			},
-			"json"
-		);
-	});
-
-	// NOTE: For temporarily reading the image uploaded so it can be displayed
-	// even without storing it to the database
-	const readUrl = (file) => {
-		const fileContainer = new DataTransfer();
-		fileContainer.items.add(file);
-		const inputFile = $(
-			'<input type="file" name="new_images[]" class="hidden" />'
-		).prop("files", fileContainer.files);
-
-		const fileReader = new FileReader();
-		fileReader.addEventListener("load", function (e) {
-			// NOTE: To assign its estimated id base on previous images,
-			// Necessary for assigning the main picture
-			let lastId = document.querySelectorAll(".edit-image-set-main");
-			lastId = parseInt($(lastId[lastId.length - 1]).attr("id")) + 1 || 1;
-
-			const name = `image${lastId}`;
-			const imageRow = `
-				<li class="edit-image-row">
-					<svg class="edit-image-drag" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
-						<path d="M9.5 3a.5.5 0 110-1 .5.5 0 010 1zm0 5a.5.5 0 110-1 .5.5 0 010 1zm0 5a.5.5 0 110-1 .5.5 0 010 1zm-4-10a.5.5 0 110-1 .5.5 0 010 1zm0 5a.5.5 0 110-1 .5.5 0 010 1zm0 5a.5.5 0 110-1 .5.5 0 010 1z"></path>
-					</svg><!--
-					--><img src="${
-						e.target.result
-					}" alt="image${lastId}" class="edit-image-preview" /><!--
-					--><p class="edit-image-name">${file.name}</p><!--
-					--><svg class="edit-image-remove" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
-						<path d="M4 .5H1.5a1 1 0 00-1 1V4M6 .5h3m2 0h2.5a1 1 0 011 1V4M.5 6v3m14-3v3m-14 2v2.5a1 1 0 001 1H4M14.5 11v2.5a1 1 0 01-1 1H11m-7-7h7m-5 7h3"></path>
-					</svg><!--
-					--><label for="${lastId}">
-						<input type="radio" name="main_image" class="edit-new-image edit-image-set-main" id="${lastId}" value="${uploadCounter++}" /> main
-					</label>
-				</li>
-			`;
-			$("#editImageList").append($(imageRow).append(inputFile));
-		});
-		fileReader.readAsDataURL(file);
-	};
-
-	// NOTE: For storing the images locally.
-	// Necessary for when uploading multiple files seperately
-	$(document).on("change", "#uploadImage", function (e) {
-		for (let i = 0; i < this.files.length; i++) {
-			readUrl(this.files.item(i));
-		}
-	});
-
-	// For Temporarily deleting images
-	$(document).on("click", ".edit-image-remove", function (e) {
-		$(this).parent().remove();
-	});
-
-	$("#productImageSub").scroll(function (e) {
-		const maxScroll = this.scrollWidth - this.clientWidth;
-		if (this.scrollLeft > 10) {
-			$(this).addClass("product-image-sub-left");
-		} else {
-			$(this).removeClass("product-image-sub-left");
-		}
-
-		if (this.scrollLeft < maxScroll - 10) {
-			$(this).addClass("product-image-sub-right");
-		} else {
-			$(this).removeClass("product-image-sub-right");
-		}
-	});
-
-	const orderList = $("#orderList");
-	$(document).on("click", ".order-page-btn", function (e) {
-		const page = this.id;
-		$.get(
-			`/api/html/orders/get/page/${page}`,
-			(res) => {
-				orderList.html(res.response);
-				$(this).siblings().removeClass("active");
-				$(this).addClass("active");
-			},
-			"json"
-		);
-	});
-	$(".order-page-btn#1").click(); // NOTE: To trigger and fetch data onload
 });
