@@ -63,7 +63,11 @@ class Users extends CI_Controller {
 		if ($result == "valid") {
 			$user = $this->User->get_by_email($post["email"]);
 			$this->session->set_userdata("user_id", $user["id"]);
-			redirect("/home");
+			if ($user["level"] == 1) {
+				redirect("/admin/orders");
+			} else {
+				redirect("/home");
+			}
 		} else {
 			$this->session->set_flashdata("message", $result);
 			$this->session->set_flashdata("message_type", "error");
@@ -105,6 +109,7 @@ class Users extends CI_Controller {
 
 	public function profile() {
 		$this->load->model("Cart");
+		$this->load->model("Address");
 		$user = $this->User->get_by_id($this->session->userdata("user_id"));
 		if(empty($user)) {
 			redirect('login');
@@ -112,7 +117,7 @@ class Users extends CI_Controller {
 		$view_data = [
 			"users/profile" => [
 				"user" => $user,
-				"addresses" => $this->User->list_address(),
+				"addresses" => $this->Address->list_by_user(),
 				"fields" => $this->session->flashdata("fields"),
 			]
 		];
@@ -153,25 +158,6 @@ class Users extends CI_Controller {
 		}
 		$this->session->set_flashdata("message", $message);
 		$this->session->set_flashdata("message_type", $type);
-		redirect("/users/profile");
-	}
-
-	public function add_address() {
-		$post = $this->input->post(null, true);
-		$result = $this->User->validate_address();
-		if ($result == "valid") {
-			$this->User->add_address($post);
-			$message = "Address has been successfully added.";
-			$type = "";
-			$fields = [];
-		} else {
-			$message = $result;
-			$type = "error";
-			$fields = $post;
-		}
-		$this->session->set_flashdata("message", $message);
-		$this->session->set_flashdata("message_type", $type);
-		$this->session->set_flashdata("fields", $fields);
 		redirect("/users/profile");
 	}
 

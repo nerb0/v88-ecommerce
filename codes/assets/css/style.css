@@ -29,6 +29,7 @@
 }
 body {
 	background-color: var(--primary);
+	overflow-x: hidden;
 }
 .input-textarea {
 	padding: 8px;
@@ -597,18 +598,25 @@ body {
 }
 .category-list {
 	box-sizing: border-box;
-	width: 1150px;
+	text-align: center;
+	width: 675px;
 	margin: 10px auto;
 }
 .category-card {
-	display: inline-block;
-	height: 200px;
-	width: 200px;
+	display: inline-table;
+	height: 100px;
+	width: 100px;
 	margin: 13px;
+	border-radius: 50%;
 	border: 2px solid var(--primary);
 	background-color: var(--primary-light);
 	overflow: hidden;
 	text-decoration: none;
+}
+.category-card > p {
+	display: table-cell;
+	vertical-align: middle;
+	color: var(--secondary-dark);
 }
 .category-card:hover {
 	border: 2px solid var(--primary-light);
@@ -710,9 +718,19 @@ body {
 	padding: 15px;
 	box-sizing: border-box;
 	height: 430px;
+	position: relative;
 }
 .register-form input:not([type="submit"]){
 	font-size: 16px;
+}
+.user-form-redirect {
+	position: absolute;
+	top: -25px;
+	left: 0px;
+	text-decoration: none;
+}
+.user-form-redirect:hover {
+	text-decoration: underline;
 }
 
 .profile-form {
@@ -749,9 +767,15 @@ body {
 	height: 110px;
 	box-sizing: border-box;
 	padding: 10px;
+	border: 2px solid var(--primary);
 	background-color: var(--fg-placeholder);
+	cursor: pointer;
+}
+.shipping-card:hover {
+	border: 2px solid var(--secondary);
 }
 .shipping-list {
+	height: 130px;
 	padding: 10px 0;
 	white-space: nowrap;
 	overflow: scroll;
@@ -765,6 +789,18 @@ body {
 	background-color: var(--secondary-dark);
 	padding: 2px 5px;
 	content: "Default";
+	top: 0;
+	right: 0;
+}
+.shipping-selected {
+	background-color: var(--fg-gutter);
+	position: relative;
+}
+.shipping-selected::after {
+	position: absolute;
+	background-color: var(--secondary-dark);
+	padding: 2px 5px;
+	content: "Selected";
 	top: 0;
 	right: 0;
 }
@@ -1351,6 +1387,7 @@ body {
 }
 
 .modal-container {
+	overflow-y: scroll;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -1361,12 +1398,22 @@ body {
 	z-index: 100000;
 }
 .modal {
+	overflow-y: scroll;
 	display: table-cell;
 	vertical-align: middle;
 }
 .modal > div {
+	overflow-y: scroll;
 	margin: 0 auto;
 }
+.modal-actions {
+	width: 100%;
+}
+.modal-actions > * {
+	width: 50%;
+	display: inline-block;
+}
+
 .edit-product {
 	position: relative;
 	border-radius: 10px;
@@ -1412,6 +1459,70 @@ body {
 .edit-product-category-group > .new-category {
 	margin-left: 30px;
 	width: 450px;
+}
+.product-select-category:hover > span {
+	color: var(--primary);
+}
+.product-select-category .dropdown-toggle-btn {
+	height: 100%;
+	width: 35px;
+	padding: 0 10px;
+	box-sizing: border-box;
+}
+.category-option-list {
+	z-index: 100000000;
+	margin-top: 7px;
+}
+.category-option-list > * {
+	cursor: default;
+	padding: 5px 15px;
+	background-color: var(--primary);
+}
+.category-option-list input[type="text"]:hover:read-only {
+	cursor: default;
+	text-decoration: underline;
+}
+.category-option-list > *:hover {
+	background-color: var(--primary-soft);
+}
+.category-option {
+	height: 35px;
+}
+.category-option > * {
+	vertical-align: middle;
+	display: inline-block;
+}
+.category-option-input {
+	font-size: 15px;
+	padding: 3px 3px;
+	width: 90%;
+	background-color: transparent;
+	user-select: none;
+	box-sizing: border-box;
+}
+.category-option-input:not(:read-only) {
+	border: 1px solid var(--secondary);
+}
+.category-option > svg {
+	fill: none;
+	box-sizing: border-box;
+	height: 100%;
+	padding: 10px;
+	width: 5%;
+	display: none;
+	cursor: pointer;
+}
+.category-option:hover > svg {
+	display: inline-block;
+}
+.category-option > svg:hover {
+	stroke-width: 2px;
+}
+.category-option > .admin-edit-category > path {
+	stroke: var(--secondary);
+}
+.category-option > .admin-delete-category > path {
+	stroke: var(--admin-nav-secondary);
 }
 .edit-image-header {
 	display: inline-block;
@@ -1520,6 +1631,7 @@ body {
 }
 .order-description { 
 	margin-top: 20px;
+	text-align: right;
 }
 .order-description > * { 
 	vertical-align: top;
@@ -1566,6 +1678,9 @@ body {
 .admin-list-container {
 	height: 790px;
 }
-#messageBox {
-	z-index: 1000000;
+.notif-message {
+	z-index: 10000000;
+}
+.notif-message.error, .notif-message.error *{
+	color: var(--primary-light);
 }

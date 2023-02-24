@@ -57,6 +57,8 @@ $route["home"] = "users";
 $route["login"] = "users/login";
 $route["logout"] = "users/logout";
 $route["register"] = "users/register";
+$route["users/address/default/(:num)"] = "addresses/set_default/$1";
+$route["users/address/update/(:num)"] = "addresses/update/$1";
 
 $route["products/(:num)/review"] = "reviews/create/$1";
 $route["reviews/(:num)/reply"] = "replies/create/$1";
@@ -71,6 +73,7 @@ $route["cart/process_checkout"] = "cart-Items/process_checkout";
 
 $route["admin/products"] = "products/list";
 $route["admin/products/add"] = "products/list";
+$route["admin/products/delete/(:num)"] = "products/delete/$1";
 $route["admin/orders"] = "orders/list";
 $route["admin/orders/show/(:num)"] = "orders/show/$1";
 
@@ -84,8 +87,9 @@ $route["api/html/products/add"] = "products/add_html";
 $route["api/html/products/get/page/(:num)"] = "products/list_html/$1";
 $route["api/html/products/catalog/get/page/(:num)"] = "products/catalog_html/$1";
 $route["api/html/orders/get/page/(:num)"] = "orders/list_html/$1";
-$route["api/html/user/address/default/(:num)"] = "users/set_default_address/$1";
-$route["api/html/user/address/list/"] = "users/list_addresses/";
+$route["api/html/user/address/list/"] = "addresses/list/";
+$route["api/html/user/address/edit/(:num)"] = "addresses/edit_html/$1";
+$route["api/json/user/address/get/(:num)"] = "addresses/get_json/$1";
 
 $route["users/login"] = "404";
 $route["users/logout"] = "404";

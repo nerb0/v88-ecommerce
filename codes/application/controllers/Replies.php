@@ -13,14 +13,16 @@ class Replies extends CI_Controller {
 		if (!empty($review)) {
 			$result = $this->Reply->validate();
 			if ($result == "valid") {
-				$message = $this->input->post("message", true);
-				$this->Reply->create($post["message"], $review_id);
+				$message = "";
+				$post = $this->input->post("message", true);
+				$this->Reply->create($post, $review_id);
 			} else {
 				$message = $result;
 				$this->session->set_flashdata("message_type", "error");
 			}
 		} else {
 			$message = "Not a valid Review ID.";
+			$this->session->set_flashdata("message_type", "error");
 		}
 		$this->session->set_flashdata("message", $message);
 		redirect("/products/show/{$review["product_id"]}");

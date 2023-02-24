@@ -4,6 +4,7 @@
 		<form action="/users/process_register" method="post">
 			<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
 			<div class="user-form register-form mx-auto shadow-lg">
+				<a href="/login" class="user-form-redirect" >&lt; Back to Login Page</a>
 				<div class="input-group">
 					<label class="input-default" style="--label: 'First Name'">
 						<input type="text" name="first_name" />

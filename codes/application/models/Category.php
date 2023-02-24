@@ -22,4 +22,16 @@ class Category extends CI_Model {
 		$result =  $this->db->query($query, [$category_name]);
 		return $this->db->insert_id();
 	}
+
+	public function update($category_id, $name) {
+		$query = "UPDATE categories SET name = ? WHERE id = ?";
+		$result =  $this->db->query($query, [$name, $category_id]);
+		return $result;
+	}
+
+	public function delete_not_in_list($category_list) {
+		$query = "DELETE FROM categories WHERE id NOT IN ?";
+		$result =  $this->db->query($query, [$category_list]);
+		return $result;
+	}
 }

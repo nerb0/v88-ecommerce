@@ -28,7 +28,7 @@ class Review extends CI_Model {
 	}
 
 	public function validate() {
-		$this->form_validation->set_rules("message", "Review Message", "trim|required|max_length[400]");
+		$this->form_validation->set_rules("message", "Review Message", "trim|required|min_length[10]|max_length[400]");
 		if ($this->form_validation->run()) {
 			return "valid";
 		} else {

@@ -8,23 +8,23 @@
 				<table>
 					<tr>
 						<td>Customer Name:</td>
-						<td>name</td>
+						<td><?= $order["user_name"] ?></td>
 					</tr>
 					<tr>
 						<td>Address:</td>
-						<td>123 Address asdasdasdas</td>
+						<td><?= $order["addresses"]["billing"]["address"] ?></td>
 					</tr>
 					<tr>
 						<td>State</td>
-						<td>TEst State</td>
+						<td><?= $order["addresses"]["billing"]["state"] ?></td>
 					</tr>
 					<tr>
 						<td>City</td>
-						<td>TEst City</td>
+						<td><?= $order["addresses"]["billing"]["city"] ?></td>
 					</tr>
 					<tr>
 						<td>Zipcode</td>
-						<td>98133</td>
+						<td><?= $order["addresses"]["billing"]["zipcode"] ?></td>
 					</tr>
 				</table>
 			</div><!--
@@ -33,23 +33,23 @@
 				<table>
 					<tr>
 						<td>Customer Name:</td>
-						<td>name</td>
+						<td><?= "{$order["addresses"]["shipping"]["first_name"]} {$order["addresses"]["shipping"]["last_name"]}" ?></td>
 					</tr>
 					<tr>
 						<td>Address:</td>
-						<td>123 Address asdasdasdas</td>
+						<td><?= $order["addresses"]["shipping"]["address"] ?></td>
 					</tr>
 					<tr>
 						<td>State</td>
-						<td>TEst State</td>
+						<td><?= $order["addresses"]["shipping"]["state"] ?></td>
 					</tr>
 					<tr>
 						<td>City</td>
-						<td>TEst City</td>
+						<td><?= $order["addresses"]["shipping"]["city"] ?></td>
 					</tr>
 					<tr>
 						<td>Zipcode</td>
-						<td>98133</td>
+						<td><?= $order["addresses"]["shipping"]["zipcode"] ?></td>
 					</tr>
 				</table>
 			</div>
@@ -72,14 +72,15 @@
 				<tr>
 					<td><?= $id ?></td>
 					<td><?= $item["name"] ?></td>
-					<td><?= $item["price"] ?></td>
+					<td>$ <?= number_format($item["price"], 2) ?></td>
 					<td><?= $item["quantity"] ?></td>
-					<td><?= $item_total ?></td>
+					<td>$ <?= number_format($item_total, 2) ?></td>
 				</tr>
 <?php		} ?>
 			</tbody>
 		</table>
-		<div class="text-right order-description">
+<?php if (!empty($receipt_url)) { ?>
+		<div class="text-right mt-md">
 			<form action="/orders/edit/<?= $order["id"] ?>" class="order-status-form">
 				<input type="hidden" value="<?= $this->security->get_csrf_hash() ?>" name="<?= $this->security->get_csrf_token_name() ?>" />
 				<select name="status" class="order-edit-status btn btn-md btn-outline-secondary">
@@ -90,18 +91,23 @@
 <?php			} ?>
 				</select>
 			</form>
+			<a class="btn btn-md btn-outline-secondary" href="<?= $receipt_url ?>" target="_blank">Receipt</a>
+		</div>
+<?php } ?>
+		<div class="order-description">
 			<table class="order-price-table">
 				<tr>
 					<td>Merchandise Subtotal</td>
-					<td><?= $sub_total ?></td>
+					<td><?= number_format($sub_total, 2) ?></td>
 				</tr>
 				<tr>
 					<td>Shipping Fee</td>
-					<td><?= $order["shipping_fee"] ?></td>
+					<td><?= number_format($order["shipping_fee"], 2) ?></td>
 				</tr>
 				<tr class="text-bold">
 					<td>Order Total</td>
-					<td><?= $sub_total + $order["shipping_fee"] ?></td>
+					<td><?= number_format($sub_total + $order["shipping_fee"], 2) ?></td>
 				</tr>
 			</table>
 		</div>
+			

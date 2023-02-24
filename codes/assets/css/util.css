@@ -127,6 +127,45 @@
 	overflow: hidden;
 }
 
+.product-image-load {
+	background-color: var(--primary-soft);
+	width: 100%;
+	height: 200px;
+	object-fit: cover;
+	animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.product-name-load {
+	background-color: var(--primary-soft);
+	width: 80%;
+	border-radius: 5px;
+	height: 20px;
+	margin: 5px auto;
+	animation: pulse 2.7s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.product-price-load {
+	background-color: var(--primary-soft);
+	border-radius: 5px;
+	position: absolute;
+	color: var(--fg-gutter);
+	bottom: 5px;
+	left: 5px;
+	width: 50px;
+	height: 20px;
+	animation: pulse 2.3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.product-sold-load {
+	background-color: var(--primary-soft);
+	border-radius: 5px;
+	position: absolute;
+	color: var(--fg-placeholder);
+	bottom: 5px;
+	right: 5px;
+	font-size: 13px;
+	width: 50px;
+	height: 12px;
+	animation: pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 @keyframes slide-in-out {
 	0%, 100% {
 		opacity: 0;

@@ -21,7 +21,7 @@
 					</div><!--
 					--><div class="product-description">
 					<h3>About this Product:</h3>
-	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pulvinar tellus vitae erat pharetra malesuada. Morbi ante risus, consectetur id mauris quis, laoreet rhoncus leo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Cras eget dapibus odio. Proin rutrum pharetra egestas. Cras in massa eget augue fringilla tempor. Etiam vitae ipsum finibus, lobortis massa quis, mattis sem. Donec ultricies volutpat finibus. Integer cursus leo volutpat lacinia maximus. Etiam hendrerit elit nisl, et egestas lorem varius a. Integer in ornare eros. Vivamus non elit non magna aliquet laoreet. Curabitur vestibulum eleifend rutrum. Mauris tristique, enim nec consectetur rhoncus, orci erat aliquet nibh, molestie mollis arcu quam id libero. Fusce ac condimentum urna. Mauris convallis laoreet mi, eu consequat est ullamcorper at. Donec sed magna sodales purus bibendum cursus a eget enim. Proin non consectetur ante. In et sem vel lectus scelerisque mollis.
+					<?= $product["description"] ?>
 					</div>
 					<form action="/cart/add" method="POST" class="product-buy-form" id="addToCartForm">
 						<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>" />
@@ -43,7 +43,8 @@
 				</form>
 				<h2>Reviews</h2>
 				<ul class="review-list">
-<?php			foreach ($reviews as $review) { ?>
+<?php		if (!empty($reviews)) {
+				foreach ($reviews as $review) { ?>
 					<li class="relative">
 						<span class="date"><?= date_format(date_create($review["created_at"]), "Y/m/d") ?></span>
 						<div class="user"><?= $review["user_name"] ?> wrote: </div>
@@ -52,9 +53,9 @@
 <?php				if (!empty($replies[$review["id"]])) {
 						foreach ($replies[$review["id"]] as $reply) { ?>
 							<li class="relative">
-								<span class="date"><?= date_format(date_create($review["created_at"]), "Y/m/d") ?></span>
-								<div class="user"><?= $review["user_name"] ?> wrote: </div>
-								<div class="message"><?= $review["message"] ?></div>
+								<span class="date"><?= date_format(date_create($reply["created_at"]), "Y/m/d") ?></span>
+								<div class="user"><?= $reply["user_name"] ?> wrote: </div>
+								<div class="message"><?= $reply["message"] ?></div>
 							</li>
 <?php					}
 					} ?>
@@ -65,7 +66,8 @@
 							</form>
 						</ul>
 					</li>
-<?php			} ?>
+<?php			}
+			} ?>
 				</ul>
 			</div>
 		</div><!--
@@ -79,7 +81,7 @@
 					--><div class="similar-product-info">
 						<p class="product-name"><?= $product["name"] ?></p>
 						<p class="product-price">$ <?= number_format($product["price"], 2) ?></p>
-						<p class="product-sold">Sold: <?= $product["sold"] ?></p>
+						<p class="product-sold">Sold: <?= $product["sold"] ?? 0 ?></p>
 					</div>
 				</a>
 <?php		} ?>

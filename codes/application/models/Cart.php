@@ -90,8 +90,11 @@ class Cart extends CI_Model {
 		],
 		"card_expiry" => [
 			"field" => "card_expiry",
-			"label" => "Card Expiry ",
-			"rules" => "required",
+			"label" => "Card Expiry",
+			"rules" => "required|callback_valid_date",
+			"errors" => [
+				"valid_date" => "{field} is invalid."
+			]
 		],
 		"card_number" => [
 			"field" => "card_number",

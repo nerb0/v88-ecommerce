@@ -45,7 +45,6 @@
 		<div class="category-list"><!--
 <?php	foreach ($categories as $category) { ?>
 			--><a href="/products/catalog?category=<?= $category["id"] ?>" class="category-card">
-				<img src="" alt="" class="category-image" />
 				<p class="text-center"><?= $category["name"] ?></p>
 			</a><!--
 <?php	} ?>

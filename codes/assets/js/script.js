@@ -1,3 +1,7 @@
+const hideDropDown = () => {
+	$(".dropdown-toggle-btn").addClass("dropdown-toggle-closed");
+	$(".dropdown-list").addClass("transparent");
+}
 const refreshToken = (newToken) => {
 	$("input[name='csrf_test_name']").val(newToken);
 };
@@ -6,7 +10,7 @@ const createMessage = (content, type) => {
 	messageBox.removeClass("notif-message");
 	messageBox.removeClass("error");
 	messageBox.addClass("hidden");
-	setTimeout(()=> {
+	setTimeout(() => {
 		messageBox.html(content);
 		messageBox.removeClass("hidden");
 		messageBox.addClass(`notif-message ${type}`);
@@ -23,11 +27,11 @@ const closeModal = () => {
 	$("#modal").html("");
 };
 
-$(document).ready(function() {
+$(document).ready(function () {
 	$(document).on(
 		"change keyup keydown",
 		".input-default > input, .input-default > textarea",
-		function(e) {
+		function (e) {
 			if ($(this).val()) {
 				$(this).parent().addClass("has-value");
 			} else {
@@ -36,7 +40,7 @@ $(document).ready(function() {
 		}
 	);
 
-	$(".light-effect-container").mouseout(function(e) {
+	$(".light-effect-container").mouseout(function (e) {
 		const lightEffect = $(this).find("span#lightEffect")["0"];
 		const { offsetX, offsetY } = e;
 		$(lightEffect).addClass("light-hidden");
@@ -47,7 +51,7 @@ $(document).ready(function() {
 			--radius: ${lightEffect.offsetHeight}px`
 		);
 	});
-	$(".light-effect-container").mousemove(function(e) {
+	$(".light-effect-container").mousemove(function (e) {
 		const lightEffect = $(this).find("span#lightEffect")["0"];
 		const { offsetX, offsetY } = e;
 		$(lightEffect).removeClass("light-hidden");
@@ -66,7 +70,7 @@ $(document).ready(function() {
 	$(".input-password > span#passwordToggle")
 		.attr("data-state", "closed")
 		.html(passwordClose)
-		.click(function(e) {
+		.click(function (e) {
 			e.stopPropagation();
 			if ($(this).attr("data-state") == "closed") {
 				$(this.previousElementSibling).attr("type", "text");
@@ -79,34 +83,34 @@ $(document).ready(function() {
 			}
 		});
 
-	$(document).click(function(e) {
-		if (e.target.className != "dropdown") {
-			const button = $(this).find(".dropdown-toggle-btn")["0"];
-			$(button).addClass("dropdown-toggle-closed");
-			$(".dropdown-list").addClass("transparent");
+	$(document).click(function (e) {
+		if (e.target.className != "dropdown" && !$(e.target).parents(".dropdown-list").hasClass("dropdown-list")) {
+			hideDropDown();
 		}
 	});
-	$(".dropdown-toggle").click(function(e) {
+	$(document).on("click", ".dropdown-toggle", function (e) {
 		e.stopPropagation();
-		const button = $(this).find(".dropdown-toggle-btn")["0"];
+		const button = $(this).find(".dropdown-toggle-btn");
 		if ($(button).hasClass("dropdown-toggle-closed")) {
 			$(button).removeClass("dropdown-toggle-closed");
 			$(this.nextElementSibling).removeClass("transparent");
 		} else {
 			$(button).addClass("dropdown-toggle-closed");
-			$(this.nextElementSibling).addClass("transparent");
+			$($(this).siblings(".dropdown-list")).addClass("transparent");
 		}
 	});
 
-	const featuredSlide = document.getElementById("featuredSlide");
-	$(document).on("click", ".featured-btn:not(.selected)", function(e) {
+	$(document).on("click", ".featured-btn:not(.selected)", function (e) {
 		const index = $(this).attr("data-index");
 		$(this).siblings().removeClass("selected");
 		$(this).addClass("selected");
-		$(featuredSlide).attr("style", `transform: translateX(-${100 * index}%)`);
+		$("#featuredSlide").attr(
+			"style",
+			`transform: translateX(-${100 * index}%)`
+		);
 	});
 
-	$("#changePasswordToggle").click(function(e) {
+	$("#changePasswordToggle").click(function (e) {
 		const fieldset = $(this).siblings("fieldset");
 		if (fieldset.attr("disabled")) {
 			fieldset.removeAttr("disabled");
@@ -119,15 +123,45 @@ $(document).ready(function() {
 		}
 	});
 
-	$(document).on("click", ".modal-close", function(e) {
+	$(document).on("click", ".modal-close", function (e) {
 		closeModal();
 	});
 
-	$(document).on("click", ".shipping-card", function(e) {
+	$(document).on("click", "#shippingList .shipping-card", function (e) {
 		const id = this.id;
-		$.get(`/api/html/user/address/${id}`, function(res) {
-			console.log(res);
-		})
+		$.get(`/api/html/user/address/edit/${id}`, function (res) {
+			if (res.status != 200) {
+				createMessage(res.message, "error");
+			} else {
+				openModal(res.data.view);
+			}
+		}, "json");
+	});
+	$(document).on("click", ".address-action-btn", function (e) {
+		e.preventDefault();
+		const id = this.id;
+		const action = $(this).attr("data-action");
+		const url = $(this).attr("data-url");
+		$.post(url, $("#addressForm").serialize(), (res) => {
+			if (res.status != 200) {
+				createMessage(res.message, "error");
+			} else {
+				if(action == "setDefault") {
+					$("#addressDefault").html("<span class='text-dark'>Default Address</span>");
+					$("#shippingList").html(res.data.view);
+				} else {
+					closeModal();
+					console.log($(`.shipping-card#${id}`));
+					$(`.shipping-card#${id}`).html(res.data.view);
+				}
+				createMessage(res.message);
+			}
+		}, "json");
+	});
+
+	$(document).on("click", "#navSearchBtn", function(e) {
+		console.log("test")
+		$("#navSearchForm").submit();
 	})
 
 	// NOTE: This is for disabling sibling checkbox from selecting the main image

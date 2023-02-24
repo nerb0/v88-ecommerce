@@ -10,18 +10,18 @@
 		<input type="hidden" name="image_sort" id="imageSort"/>
 		<input type="hidden" value="<?= $this->security->get_csrf_hash() ?>" name="<?= $this->security->get_csrf_token_name() ?>" />
 		<label class="input-default input-dark" style="--label: 'Product Name'">
-			<input type="text" name="name"  value="Test Product 1"/>
+			<input type="text" name="name" />
 		</label>
 		<label for="" class="input-default input-dark" style="--label: 'Product Description'">
-			<textarea name="description" class="input-textarea btn-sharp btn-outline-primary-dark edit-product-description">Test Product 1 Description</textarea>
+			<textarea name="description" class="input-textarea btn-sharp btn-outline-primary-dark edit-product-description"></textarea>
 		</label>
 
 		<div class="input-group">
 			<label class="input-default input-dark" style="--label: 'Product Remaining Stocks'">
-				<input type="number" name="quantity" min="0" value="24" />
-			</label>
-			<label class="input-default input-dark" style="--label: 'Product Price'">
-				<input type="number" step="0.01" name="price" min="0.01" value="42.4"/>
+				<input type="number" name="quantity" min="0" />
+			</label><!--
+			--><label class="input-default input-dark" style="--label: 'Product Price'">
+				<input type="number" step="0.01" name="price" min="0.01" />
 			</label>
 		</div>
 
@@ -43,7 +43,7 @@
 			</label>
 			<ul class="edit-image-list ui-sortable" id="editImageList"></ul>
 		</div>
-		<input type="button" class="btn btn-md btn-outline-primary-dark mt-md submit-product-btn" data-url="/products/add" value="Add Product"/>
+		<input type="button" class="btn btn-md btn-outline-primary-dark mt-md submit-product-btn" data-field="products" data-url="/products/add" value="Add Product"/>
 		<input type="submit" class="btn btn-md btn-outline-primary-dark mt-md" value="Preview"/>
 		<input type="button" class="btn btn-md btn-outline-error mt-md modal-close" value="Cancel"/>
 	</form>

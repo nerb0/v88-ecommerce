@@ -15,8 +15,8 @@ class Reply extends CI_Model {
 						ORDER BY replies.created_at DESC";
 		$result = $this->db->query($query, [$product_id])->result_array();
 		$grouped_result = array_reduce($result, function($res, $reply) {
-			$result[$reply["review_id"]][] = $reply;
-			return $result;
+			$res[$reply["review_id"]][] = $reply;
+			return $res;
 		}, []);
 		return $grouped_result;
 	}
@@ -35,7 +35,7 @@ class Reply extends CI_Model {
 	}
 
 	public function validate() {
-		$this->form_validation->set_rules("message", "Reply Message", "trim|required|max_length[400]");
+		$this->form_validation->set_rules("message", "Reply Message", "trim|required|min_length[10]|max_length[400]");
 		$this->form_validation->set_message("valid_review", "Not a valid Review ID.");
 		if ($this->form_validation->run()) {
 			return "valid";

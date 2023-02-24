@@ -4,6 +4,14 @@ class Order extends CI_Model {
 	const STATUS = [ "Processing", "To Ship", "Shipping", "Cancelled", "Delivered" ];
 	const ROW_LIMIT = 15;
 	const SHIPPING_FEE = 24;
+	const ORDER = [
+		"orders.created_at ASC",
+		"orders.created_at DESC",
+		"orders.updated_at ASC",
+		"orders.updated_at DESC",
+		"orders.id ASC",
+		"orders.id DESC",
+	];
 
 	public function get($filter = []) {
 		$conditions = [];
@@ -16,11 +24,16 @@ class Order extends CI_Model {
 			$conditions[] = "status = ?";
 			$values[] = $filter["status"];
 		}
+		if (!empty($filter["order"]) && $filter["order"] < count(self::ORDER) && $filter["order"] > 0) {
+			$order = "ORDER BY " . self::ORDER[$filter["order"]];
+		} else {
+			$order = "";
+		}
 		$where = (!empty($conditions)) ? "WHERE " . implode(" AND ", $conditions) : "";
 		$query = "SELECT orders.*
 					,CONCAT_WS(' ',users.first_name, users.last_name) as user_name
 						FROM orders LEFT JOIN users ON user_id = users.id
-						{$where} GROUP BY orders.id";
+						{$where} GROUP BY orders.id {$order}";
 		return $this->db->query($query, $values)->result_array();
 	}
 
@@ -48,7 +61,7 @@ class Order extends CI_Model {
 	}
 
 	public function update($order_id, $status) {
-		$query = "UPDATE orders SET status = ? WHERE id = ?";
+		$query = "UPDATE orders SET status = ?, updated_at = NOW() WHERE id = ?";
 		$result = $this->db->query($query, [$status, $order_id]);
 		return $result;
 	}

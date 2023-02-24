@@ -26,10 +26,18 @@ class Orders extends CI_Controller {
 			"message_type" => $this->session->flashdata("message_type"),
 			"user" => $user
 		];
+		$order = $this->Order->get_by_id($order_id);
+		$order["addresses"] = json_decode($order["addresses"], true);
+		if (!empty($order["charge_id"]))  {
+			$stripe = new \Stripe\StripeClient($_SERVER["HTTP_STRIPE_KEY"]);
+			$response = $stripe->charges->retrieve($order["charge_id"], []);
+			$receipt_url = $response->receipt_url;
+		} else $receipt_url  = "";
 		$view_data = [
 			"admin/orders/index" => [
-				"order" => $this->Order->get_by_id($order_id),
+				"order" => $order,
 				"statuses" => $this->Order::STATUS,
+				"receipt_url" => $receipt_url,
 			]
 		];
 		render_admin_html($this, $view_data, $header_data);
@@ -66,6 +74,7 @@ class Orders extends CI_Controller {
 
 	public function list_html(int $page) {
 		$filter = $this->input->get(null, true);
+		$filter["order"] = 3;
 		$orders = $this->Order->get($filter);
 
 		$order_list = get_page($orders, $page, $this->Order::ROW_LIMIT);
@@ -94,20 +103,25 @@ class Orders extends CI_Controller {
 	public function edit(int $order_id) {
 		$status = $this->input->post("status", true);
 		if (empty($this->Order->get_by_id($order_id))) {
-			$http_code = 404;
-			$message = "Order cannot be found.";
+			echo json_encode([
+				"status" => 404,
+				"message" => "Order cannot be found.",
+			]);
 		} else if (in_array($status, $this->Order::STATUS)){
 			$this->Order->update($order_id, $status);
-			$http_code = 200;
-			$message = "Order#{$order_id} has been updated to {$status}";
+			echo json_encode([
+				"status" => 200,
+				"message" => "Order#{$order_id} has been updated to {$status}",
+				"data" => [
+					"last_page" => $this->Order->get_total_pages()
+				]
+			]);
 		} else {
-			$http_code = 500;
-			$message = "Invalid Order Status";
+			echo json_encode([
+				"status" => 500,
+				"message" => "Invalid Order Status",
+			]);
 		}
-		echo json_encode([
-			"status" => $http_code,
-			"message" => $message
-		]);
 	}
 }
 

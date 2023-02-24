@@ -1,5 +1,5 @@
-$(document).ready(function() {
-	$("#productImageSub").scroll(function(e) {
+$(document).ready(function () {
+	$("#productImageSub").scroll(function (e) {
 		const maxScroll = this.scrollWidth - this.clientWidth;
 		if (this.scrollLeft > 10) {
 			$(this).addClass("product-image-sub-left");
@@ -17,11 +17,9 @@ $(document).ready(function() {
 	const catalogList = $("#catalogList");
 	const catalogPage = $("#catalogPage");
 	const catalogBottomPage = $("#catalogBottomPage");
-	let filter = "";
 	const getPage = (page) => {
-		$.get(
-			`/api/html/products/catalog/get/page/${page}`,
-			filter,
+		$.get(`/api/html/products/catalog/get/page/${page}`,
+			$("#searchFilter,#catalogFilter").serialize(),
 			(res) => {
 				catalogList.html(res.data);
 				catalogPage.html(res.pages);
@@ -32,26 +30,25 @@ $(document).ready(function() {
 			"json"
 		);
 	};
-	getPage(1);
-	$(document).on("click", ".catalog-page-btn", function(e) {
+	setTimeout(() => getPage(1), 2000);
+	$(document).on("click", ".catalog-page-btn", function (e) {
 		const page = this.id;
 		getPage(page);
 	});
 	$(document).on(
 		"change keyup keydown",
-		"#searchProduct, #catalogFilter input",
-		function(e) {
-			filter = $("#searchFilter,#catalogFilter").serialize();
+		"#searchProduct, #catalogFilter input, #catalogFilter select",
+		function (e) {
 			getPage(1);
 		}
 	);
 
-	$(document).on("submit", "#addToCartForm", function(e) {
+	$(document).on("submit", "#addToCartForm", function (e) {
 		e.preventDefault();
 		$.post(
 			"/cart/add",
 			$(this).serialize(),
-			function(res) {
+			function (res) {
 				let type = "error";
 				if (res.status == 200) {
 					if (res.data.count) $("#cartCount").html(res.data.count);
@@ -68,7 +65,7 @@ $(document).ready(function() {
 		$.post(
 			"/api/json/cart/total",
 			$("#userCart").serialize(),
-			function(res) {
+			function (res) {
 				$("#cartTotalPrice").html(res.data.total);
 				refreshToken(res.token);
 			},
@@ -76,7 +73,7 @@ $(document).ready(function() {
 		);
 	};
 
-	$(document).on("change", "#cartSelectAll", function(e) {
+	$(document).on("change", "#cartSelectAll", function (e) {
 		if (this.checked) {
 			$("#userCart input[type='checkbox']").prop("checked", "true");
 		} else {
@@ -84,7 +81,7 @@ $(document).ready(function() {
 		}
 		calculateTotalPrice();
 	});
-	$(document).on("change", ".cart-checkbox", function(e) {
+	$(document).on("change", ".cart-checkbox", function (e) {
 		if (!this.checked) {
 			$("#cartSelectAll").prop("checked", "");
 		} else {
@@ -93,7 +90,7 @@ $(document).ready(function() {
 				.parent()
 				.siblings()
 				.find(".cart-checkbox")
-				.each(function() {
+				.each(function () {
 					if (!this.checked) is_all_selected = false;
 				});
 			if (is_all_selected) $("#cartSelectAll").prop("checked", "true");
@@ -101,7 +98,7 @@ $(document).ready(function() {
 		calculateTotalPrice();
 	});
 
-	$(document).on("change", ".cart-quantity", function(e) {
+	$(document).on("change", ".cart-quantity", function (e) {
 		const token = `csrf_test_name=${$("input[name='csrf_test_name']").val()}`;
 		console.log($("#userCart").serialize());
 		const id = this.id;
@@ -118,11 +115,11 @@ $(document).ready(function() {
 			"json"
 		);
 	});
-	$(document).on("click", ".cart-remove", function(e) {
+	$(document).on("click", ".cart-remove", function (e) {
 		const id = this.id;
 		$.get(
 			`/api/html/cart/remove/${id}`,
-			function(res) {
+			function (res) {
 				openModal(res.data);
 				calculateTotalPrice();
 			},
@@ -130,12 +127,12 @@ $(document).ready(function() {
 		);
 	});
 
-	$(document).on("submit", "#cartRemoveForm", function(e) {
+	$(document).on("submit", "#cartRemoveForm", function (e) {
 		e.preventDefault();
 		$.post(
 			$(this).attr("action"),
 			$(this).serialize(),
-			function(res) {
+			function (res) {
 				console.log(res);
 				$("#cartItemList").html(res.data.items);
 				$("#cartCount").html(res.data.count);
@@ -149,7 +146,7 @@ $(document).ready(function() {
 	const fetchCartItems = () => {
 		$.get(
 			"/api/html/cart/list",
-			function(res) {
+			function (res) {
 				$("#cartItemList").html(res.data.items);
 			},
 			"json"
@@ -157,20 +154,56 @@ $(document).ready(function() {
 	};
 	fetchCartItems();
 
-	const setSameBillingBtn = document.getElementById("setSameBillingBtn");
-	$(setSameBillingBtn).change(function(e) {
+	const updateBilling = () => {
+		$("#billingAddressForm input").each(function () {
+			const field = $(this).attr("data-field");
+			const value = $(`input[name='shipping_${field}']`).val();
+			$(this).val(value);
+			if (value) $(this).parent().addClass("has-value");
+		});
+	}
+	$(document).on("change", "#shippingAddressForm input", function (e) {
+		if ($("#setSameBillingBtn").prop("checked") == true) {
+			updateBilling();
+		}
+	});
+	$(document).on("keydown keyup", "#shippingAddressForm input", function (e) {
+		$(".shipping-selected").removeClass("shipping-selected");
+		if ($("#setSameBillingBtn").prop("checked") == true) {
+			updateBilling();
+		}
+	});
+	$(document).on("change", "#setSameBillingBtn", function (e) {
 		if (this.checked) {
-			$("#billingAddressForm input").each(function() {
-				const field = $(this).attr("data-field");
-				const value = $(`input[name='shipping_${field}']`).val();
-				$(this).val(value);
-				if (value) $(this).parent().addClass("has-value");
+			$("#billingAddressForm input").each(function () {
+				$(this).attr("readonly", "");
 			});
+			updateBilling();
 		} else {
-			$("#billingAddressForm input").each(function() {
+			$("#billingAddressForm input").each(function () {
 				$(this).parent().removeClass("has-value");
+				$(this).removeAttr("readonly");
 				$(this).val("");
 			});
+		}
+	});
+
+	$(document).on("click", "#checkoutAddressList .shipping-card", function (e) {
+		const selected = $(".shipping-selected").attr("id");
+		const id = this.id;
+		if (selected != id) {
+			$.get(`/api/json/user/address/get/${id}`, (res) => {
+				if (res.status != 200) {
+					createMessage(res.message, "error");
+				} else {
+					$(".shipping-selected").removeClass("shipping-selected");
+					$(this).addClass("shipping-selected");
+					for (const field in res.data) {
+						$(`input[name='shipping_${field}']`).val(res.data[field]);
+					}
+					$("#shippingAddressForm input").change();
+				}
+			}, "json");
 		}
 	});
 });

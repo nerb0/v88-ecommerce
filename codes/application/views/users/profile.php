@@ -36,17 +36,21 @@
 		</div><!--
 		--><div class="shipping-form">
 			<h3>Select a preferred Address: </h3>
-			<div class="shipping-list"><!--
-<?php		foreach($addresses as $address) { ?>
-				--><div class="shipping-card <?= $address["is_default"] ? "shipping-preferred" : "" ?>" id="<?= $address["id"] ?>">
+			<div class="shipping-list" id="shippingList">
+<?php	if(!empty($addresses)) { 
+			foreach($addresses as $address) { ?>
+				<div class="shipping-card <?= $address["is_default"] ? "shipping-preferred" : "" ?>" id="<?= $address["id"] ?>">
 					<p class="shipping-name"><?= "{$address["first_name"]} {$address["last_name"]}" ?></p>
 					<p class="shipping-address"><?= $address["address"] ?></p>
 					<p class="shipping-email"><?= $address["email"] ?></p>
-				</div><!--
-<?php		} ?>
-			--></div>
+				</div>
+<?php		}
+		}  else { ?>
+				<span>No Addresses Found</span>
+<?php	}?>
+			</div>
 			<h3>or Add a new Address: </h3>
-			<form action="/users/add_address" method="post">
+			<form action="/addresses/create" method="post">
 				<input type="hidden" value="<?= $this->security->get_csrf_hash() ?>" name="<?= $this->security->get_csrf_token_name() ?>" />
 				<label  class="input-default <?php if(!empty($fields["first_name"])) echo "has-value" ?>" style="--label: 'First Name'">
 					<input type="text" name="first_name" value="<?= $fields["first_name"] ?? "" ?>"/>

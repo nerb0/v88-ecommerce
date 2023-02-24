@@ -18,18 +18,22 @@
 <?php		} ?>
 			</div>
 
-			<div class="checkout-shipping-address-container">
-				<p class="checkout-shipping-name">Shipping Full Name</p>
-				<p class="checkout-shipping-address">Shipping Full Address</p>
-				<p class="checkout-shipping-email">Shipping Email</p>
-				<div id="selectCheckoutShippingAddress" class="select-shipping-address">
-					<svg class="select-shipping-address-btn" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg" width="15" height="15">
-						<path d="M5 14l7-6.5L5 1" stroke-linecap="square"></path>
-					</svg>
+			<h2 class="mt-md">Saved Addresses:</h2>
+			<div class="shipping-list" id="checkoutAddressList">
+<?php		if (!empty($addresses)) {
+				foreach($addresses as $address) { ?>
+				<div class="shipping-card <?= $address["is_default"] ? "shipping-selected" : "" ?>" id="<?= $address["id"] ?>">
+					<p class="shipping-name"><?= "{$address["first_name"]} {$address["last_name"]}" ?></p>
+					<p class="shipping-address"><?= $address["address"] ?></p>
+					<p class="shipping-email"><?= $address["email"] ?></p>
 				</div>
+<?php			}
+			} else { ?>
+				No Saved Address Found.
+<?php 		} ?>
 			</div>
 			<div class="mt-md checkout-address">
-				<div>
+				<div id="shippingAddressForm">
 					<h2>Shipping Address:</h2>
 					<div class="input-group">
 						<label class="<?php if(!empty($default_address["first_name"])) echo "has-value" ?> input-default" style="--label: 'First Name'">

@@ -41,17 +41,11 @@ class Cart_Items extends CI_Controller {
 		}
 		$items = $this->input->get("cart_items", true);
 		if(empty($items)) {
-			$this->session->set_flashdata("message", "Please select an item before checkout.");
-			$this->session->set_flashdata("message_type", "error");
 			redirect("/cart");
-			return;
 		}
 		$selected_items = $this->Cart->get_selected_items($items);
 		if(empty($selected_items)) {
-			$this->session->set_flashdata("message", "Products cannot be found. Try to refresh this window");
-			$this->session->set_flashdata("message_type", "error");
 			redirect("/cart");
-			return;
 		}
 		$this->load->model("Address");
 		$subtotal = $this->Cart->calculate_total_price($items);
@@ -60,7 +54,7 @@ class Cart_Items extends CI_Controller {
 		$view_data = [
 			"products/checkout" => [
 				"addresses" => $addresses,
-				"default_address" => $addresses[0] ?? "",
+				"default_address" => $addresses[0],
 				"selected_items" => $selected_items,
 				"subtotal" => number_format($subtotal, 2),
 				"shipping_fee" => number_format($shipping_fee, 2),
@@ -92,7 +86,7 @@ class Cart_Items extends CI_Controller {
 		$post = $this->input->post(null, true);
 		$result = $this->Cart->validate();
 		$url_param = implode("&", array_map(function($item){
-			return "cart_items[]={$item}";
+			return "checkout_items[]={$item}";
 		}, $post["checkout_items"]));
 		if ($result == "valid") {
 			$this->load->model("Order");
@@ -358,10 +352,5 @@ class Cart_Items extends CI_Controller {
 		if (count($email) != 2) return false;
 
 		return true;
-	}
-	public function valid_date($date) {
-		if (strlen($date) == 0) return true;
-		$d = DateTime::createFromFormat("m/Y", $date);
-		return $d && $d->format("m/Y") === $date;
 	}
 }

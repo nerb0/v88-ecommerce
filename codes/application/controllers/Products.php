@@ -14,10 +14,13 @@ class Products extends CI_Controller {
 			redirect('login');
 		}
 
+		$filter = $this->input->get(null, true);
 		$view_data = [
 			"products/catalog" => [
 				"total_pages" => $this->Product->get_total_pages(),
 				"categories" => $this->Category->get_all(),
+				"selected_category" => $filter["category"] ?? "",
+				"search" => $filter["search"] ?? "",
 			]
 		];
 		$header_data = [
@@ -127,6 +130,13 @@ class Products extends CI_Controller {
 			if (!empty($post["new_category"])) {
 				$post["category_id"] = $this->Category->create($post["new_category"]);
 			}
+			if (!empty($post["updated_category_list"])) {
+				$updated_categories = json_decode($post["updated_category_list"], true);
+				foreach ($updated_categories as $id => $new_name) {
+					$this->Category->update($id, $new_name);
+				}
+				$this->Category->delete_not_in_list(array_keys($updated_categories));
+			}
 			$this->Product->update($product_id, $post);
 			$this->Product->upload_images(
 				$product_id,
@@ -137,18 +147,21 @@ class Products extends CI_Controller {
 				// The value is on a stringified JSON
 				json_decode($post["image_sort"], true)
 			);
-			$message = "Successfully edited Product #{$product_id}";
-			$status = 200;
+			echo json_encode([
+				"status" => 200,
+				"message" => "Successfully edited Product #{$product_id}",
+				"data" => [
+					"last_page" => $this->Product->get_total_pages()
+				]
+			]);
 		} else {
-			$message = $result;
-			$status = 500;
+			echo json_encode([
+				"status" => 500,
+				"message" => $result,
+			]);
 		}
-		echo json_encode([
-			"status" => $status,
-			"message" => $message,
-		]);
 	}
-	public function remove($product_id) {
+	public function delete($product_id) {
 		$result = $this->Product->delete($product_id);
 		if ($result) {
 			$status = 200;

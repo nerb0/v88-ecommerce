@@ -1,0 +1,6 @@
+Capstone Demo
+ERD: 95%
+Web Design: 90%
+MVC: 90%
+Youtube demo link: https://youtu.be/jpbHBKC8vag
+Github link: https://github.com/nerb-visage/village88-php-capstone

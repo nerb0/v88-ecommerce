@@ -114,18 +114,6 @@ class User extends CI_Model {
 		return $this->db->query($query, [$user_id])->row_array();
 	}
 
-	public function list_address() {
-		$user_id = $this->session->userdata("user_id");
-		$query = "SELECT * FROM user_addresses WHERE user_id = ? ORDER BY is_default DESC";
-		return $this->db->query($query, [$user_id])->result_array();
-	}
-
-	public function get_default_address() {
-		$user_id = $this->session->userdata("user_id");
-		$query = "SELECT * FROM user_addresses WHERE user_id = ? AND is_default = 1";
-		return $this->db->query($query, [$user_id])->row_array();
-	}
-
 	public function create($user) {
 		$salt = bin2hex(openssl_random_pseudo_bytes(26));
 		$encrypted_password = md5($user["password"] . $salt);
@@ -176,38 +164,6 @@ class User extends CI_Model {
 		return $result;
 	}
 
-	public function add_address($address) {
-		$user_id = $this->session->userdata("user_id");
-		$default = (!empty($this->list_address())) ? 0 : 1;
-		$query = "INSERT INTO user_addresses(first_name, last_name, email, address, address_two, state, city, zipcode, user_id, is_default) VALUES(?,?,?,?,?,?,?,?,?,?)";
-		$result = $this->db->query($query, [
-			$address["first_name"],
-			$address["last_name"],
-			$address["email"],
-			$address["address"],
-			$address["address_two"],
-			$address["state"],
-			$address["city"],
-			$address["zipcode"],
-			$user_id,
-			$default
-		]);
-	}
-
-	public function validate_address() {
-		$rules = [
-			self::RULES["first_name"],
-			self::RULES["last_name"],
-			self::RULES["address_email"],
-			self::RULES["address"],
-			self::RULES["address_two"],
-			self::RULES["state"],
-			self::RULES["city"],
-			self::RULES["zipcode"],
-		];
-		return $this->validate($rules);
-	}
-	
 	public function validate_profile($change_password) {
 		$rules = [
 			self::RULES["first_name"],

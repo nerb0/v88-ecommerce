@@ -43,7 +43,8 @@ class Product extends CI_Model {
 			"label" => "Product Category",
 			"rules" => "integer|callback_valid_category|callback_is_category_needed",
 			"errors" => [
-				"valid_category" => "{field} is an invalid category"
+				"valid_category" => "{field} is an invalid category",
+				"is_category_needed" => "Please choose a category for the product."
 			]
 		],
 		"new_category" => [
@@ -96,12 +97,17 @@ class Product extends CI_Model {
 			$conditions[] = "price <= ?";
 			$values[] = $filter["max_price"];
 		}
+		if (!empty($filter["order"]) && $filter["order"] < count(self::ORDER) && $filter["order"] > 0) {
+			$order = "ORDER BY " . self::ORDER[$filter["order"]];
+		} else {
+			$order = "";
+		}
 		$where =(!empty($conditions)) ? "WHERE " . implode(" AND ", $conditions) : "";
 		$query = "SELECT products.*
 					, SUM(JSON_EXTRACT(order_items, CONCAT('$.\"', products.id,'\".quantity'))) as sold
 					FROM products LEFT JOIN orders
 						ON JSON_SEARCH(JSON_KEYS(order_items), 'one', products.id) IS NOT NULL
-						{$where} GROUP BY products.id";
+						{$where} GROUP BY products.id {$order}";
 		return $this->db->query($query, $values)->result_array();
 	}
 	
@@ -122,7 +128,7 @@ class Product extends CI_Model {
 					,SUM(JSON_EXTRACT(order_items, CONCAT('$.\"', products.id,'\".quantity'))) as sold
 					FROM products LEFT JOIN orders
 						ON JSON_SEARCH(JSON_KEYS(order_items), 'one', products.id) IS NOT NULL
-					INNER JOIN categories
+					LEFT JOIN categories
 						ON categories.id = category_id
 					WHERE products.id = ?
 					GROUP BY products.id";
@@ -190,7 +196,12 @@ class Product extends CI_Model {
 	public function delete($product_id) {
 		$query = "DELETE FROM products WHERE id = ?";
 		$folder = bin2hex("product{$product_id}");
-		rmdir("assets/img/products/{$folder}");
+		$files = glob("assets/img/products/{$folder}/{,.}*", GLOB_BRACE); // get all file names
+		foreach($files as $file) { 
+			if(is_file($file)) {
+				unlink($file); // delete file
+			}
+		}
 		return $this->db->query($query, [$product_id]);
 	}
 

@@ -26,20 +26,38 @@
 
 		<div class="select-category">
 			<strong class="text-dark">Product Category: </strong>
-			<div name="category" class="btn btn-md btn-outline-primary-dark mt product-select-category">
-				<input type="hidden" name="selected_category_id" value="<?= $product["category_id"] ?>"/>
-				<input type="hidden" name="selected_category_name" value="<?= $product["category_name"] ?>"/>
-				<div class="category-value"><?= $product["category_name"] ?></div>
-				<div class="category-dropdown">
+			<div name="category" class="btn btn-md btn-outline-primary-dark mt product-select-category dropdown">
+				<input type="hidden" disabled name="updated_category_list" id="updatedCategories" />
+				<input type="hidden" name="category" id="selectedCategory" value="<?= $product["category_id"] ?>" />
+				<span class="category-main-name" id="mainCategoryText" data-id="<?= $product["category_id"] ?>"><?= $product["category_name"] ?></span>
+				<div class="dropdown-toggle">
+					<svg class="dropdown-toggle-btn dropdown-toggle-closed" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M7.5 1.5l-7 12h14l-7-12z" stroke-linejoin="round"></path>
+					</svg>
+				</div>
+				<div class="dropdown-list transparent category-option-list">
+					<div class="category-option" data-id="<?= $product["category_id"] ?>">
+						<input type="text" readonly class="category-option-input" value="<?= $product["category_name"] ?>" data-id="<?= $product["category_id"] ?>" /><!--
+						--><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg" class="admin-edit-category">
+							<path d="M.5 10.5l-.354-.354-.146.147v.207h.5zm10-10l.354-.354a.5.5 0 00-.708 0L10.5.5zm4 4l.354.354a.5.5 0 000-.708L14.5 4.5zm-10 10v.5h.207l.147-.146L4.5 14.5zm-4 0H0a.5.5 0 00.5.5v-.5zm.354-3.646l10-10-.708-.708-10 10 .708.708zm9.292-10l4 4 .708-.708-4-4-.708.708zm4 3.292l-10 10 .708.708 10-10-.708-.708zM4.5 14h-4v1h4v-1zm-3.5.5v-4H0v4h1z"></path>
+						</svg><!--
+						--><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg" class="admin-delete-category">
+							<path d="M4.5 3V1.5a1 1 0 011-1h4a1 1 0 011 1V3M0 3.5h15m-13.5 0v10a1 1 0 001 1h10a1 1 0 001-1v-10M7.5 7v5m-3-3v3m6-3v3"></path>
+						</svg>
+					</div>
 <?php			foreach ($categories as $category) {
 					if ($category["id"] != $product["category_id"]) { ?>
 					<div class="category-option" id="<?= $category["id"] ?>">
-						<input type="hidden" name="category_id[]" value="<?= $category["id"] ?>"/>
-						<input type="hidden" name="category_name[]" value="<?= $category["name"] ?>"/>
-						<?= $category["name"] ?>
+						<input type="text" readonly class="category-option-input" value="<?= $category["name"] ?>" data-id="<?= $category["id"] ?>" /><!--
+						--><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg" class="admin-edit-category">
+							<path d="M.5 10.5l-.354-.354-.146.147v.207h.5zm10-10l.354-.354a.5.5 0 00-.708 0L10.5.5zm4 4l.354.354a.5.5 0 000-.708L14.5 4.5zm-10 10v.5h.207l.147-.146L4.5 14.5zm-4 0H0a.5.5 0 00.5.5v-.5zm.354-3.646l10-10-.708-.708-10 10 .708.708zm9.292-10l4 4 .708-.708-4-4-.708.708zm4 3.292l-10 10 .708.708 10-10-.708-.708zM4.5 14h-4v1h4v-1zm-3.5.5v-4H0v4h1z"></path>
+						</svg><!--
+						--><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg" class="admin-delete-category">
+							<path d="M4.5 3V1.5a1 1 0 011-1h4a1 1 0 011 1V3M0 3.5h15m-13.5 0v10a1 1 0 001 1h10a1 1 0 001-1v-10M7.5 7v5m-3-3v3m6-3v3"></path>
+						</svg>
 					</div>
-<?php				}
-				} ?>
+<?php			}
+			} ?>
 				</div>
 			</div>
 		</div><!--
@@ -87,7 +105,7 @@
 			</ul>
 		</div>
 		<div class="text-right">
-			<input type="button" class="btn btn-md btn-outline-secondary-dark mt-md submit-product-btn" data-url="/products/edit/<?= $product["id"] ?>" value="Update"/>
+			<input type="button" class="btn btn-md btn-outline-secondary-dark mt-md submit-product-btn" data-field="products" data-url="/products/edit/<?= $product["id"] ?>" value="Update"/>
 			<input type="submit" class="btn btn-md btn-outline-primary-dark mt-md" value="Preview" id="previewEditBtn"/>
 			<input type="button" class="btn btn-md btn-outline-error mt-md modal-close" value="Cancel"/>
 		</div>
