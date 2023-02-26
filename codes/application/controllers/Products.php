@@ -9,11 +9,7 @@ class Products extends CI_Controller {
 	}
 
 	public function catalog() {
-		$user = $this->User->get_by_id($this->session->userdata("user_id"));
-		if(empty($user)) {
-			redirect('login');
-		}
-
+		$user = $this->User->get_by_session();
 		$filter = $this->input->get(null, true);
 		$view_data = [
 			"products/catalog" => [
@@ -32,7 +28,7 @@ class Products extends CI_Controller {
 				"Home" => "/home",
 				"Catalog" => "#",
 			],
-			"cart_count" => count($this->Cart->get_user_items($user["id"])),
+			"cart_count" => count($this->Cart->get_user_items($user["id"] ?? -1)) ?? 0,
 			"message" => $this->session->flashdata("message"),
 			"message_type" => $this->session->flashdata("message_type"),
 			"user" => $user
@@ -41,13 +37,9 @@ class Products extends CI_Controller {
 	}
 
 	public function show($product_id) {
-		$user = $this->User->get_by_id($this->session->userdata("user_id"));
-		if(empty($user)) {
-			redirect('login');
-		}
-
 		$this->load->model("Review");
 		$this->load->model("Reply");
+		$user = $this->User->get_by_session();
 		$product = $this->Product->get_by_id($product_id);
 		if (empty($product)) {
 			redirect("/home");
@@ -72,7 +64,7 @@ class Products extends CI_Controller {
 				"Home" => "/home",
 				"Catalog" => "/products/catalog",
 			],
-			"cart_count" => count($this->Cart->get_user_items($user["id"])),
+			"cart_count" => count($this->Cart->get_user_items($user["id"] ?? 0)),
 			"message" => $this->session->flashdata("message"),
 			"message_type" => $this->session->flashdata("message_type"),
 			"user" => $user
@@ -80,25 +72,30 @@ class Products extends CI_Controller {
 		render_html($this, $view_data, $header_data );
 	}
 	public function preview() {
+		$user = $this->User->get_by_session();
+		if(empty($user)) {
+			redirect('login');
+		}
+		if ($user["id"] != 1) {
+			redirect('/home');
+		}
 		$post = $this->input->post(null, true);
-		$this->load->view("products/preview", $post);
-	}
-	public function preview_add() {
-		$post = $this->input->post(null, true);
-		$post["uploaded_images"] = [];
 		if (!empty($_FILES["new_images"]["tmp_name"])) {
 			foreach($_FILES["new_images"]["tmp_name"] as $index => $tmp_name) {
 				$content = file_get_contents($tmp_name);
-				$post["uploaded_images"][] = "data:image/jpeg;base64," . base64_encode($content);
+				$post["images"][] = "data:image/jpeg;base64," . base64_encode($content);
 			}
 		}
-		$this->load->view("products/preview_add", $post);
+		$this->load->view("products/preview", $post);
 	}
 
 	public function list() {
-		$user = $this->User->get_by_id($this->session->userdata("user_id"));
+		$user = $this->User->get_by_session();
 		if(empty($user)) {
 			redirect('login');
+		}
+		if ($user["id"] != 1) {
+			redirect('/home');
 		}
 
 		$view_data = [

@@ -1,7 +1,7 @@
 const hideDropDown = () => {
 	$(".dropdown-toggle-btn").addClass("dropdown-toggle-closed");
 	$(".dropdown-list").addClass("transparent");
-}
+};
 const refreshToken = (newToken) => {
 	$("input[name='csrf_test_name']").val(newToken);
 };
@@ -82,9 +82,18 @@ $(document).ready(function () {
 				$(this).html(passwordClose);
 			}
 		});
+	$(document).on("load", ".input-default", function (e) {
+		console.log($(this).find("input").val());
+		if ($(this).find("input").val()) {
+			$(this).addClass("has-value");
+		}
+	});
 
 	$(document).click(function (e) {
-		if (e.target.className != "dropdown" && !$(e.target).parents(".dropdown-list").hasClass("dropdown-list")) {
+		if (
+			e.target.className != "dropdown" &&
+			!$(e.target).parents(".dropdown-list").hasClass("dropdown-list")
+		) {
 			hideDropDown();
 		}
 	});
@@ -129,40 +138,51 @@ $(document).ready(function () {
 
 	$(document).on("click", "#shippingList .shipping-card", function (e) {
 		const id = this.id;
-		$.get(`/api/html/user/address/edit/${id}`, function (res) {
-			if (res.status != 200) {
-				createMessage(res.message, "error");
-			} else {
-				openModal(res.data.view);
-			}
-		}, "json");
+		$.get(
+			`/api/html/user/address/edit/${id}`,
+			function (res) {
+				if (res.status != 200) {
+					createMessage(res.message, "error");
+				} else {
+					openModal(res.data.view);
+				}
+			},
+			"json"
+		);
 	});
 	$(document).on("click", ".address-action-btn", function (e) {
 		e.preventDefault();
 		const id = this.id;
 		const action = $(this).attr("data-action");
 		const url = $(this).attr("data-url");
-		$.post(url, $("#addressForm").serialize(), (res) => {
-			if (res.status != 200) {
-				createMessage(res.message, "error");
-			} else {
-				if(action == "setDefault") {
-					$("#addressDefault").html("<span class='text-dark'>Default Address</span>");
-					$("#shippingList").html(res.data.view);
+		$.post(
+			url,
+			$("#addressForm").serialize(),
+			(res) => {
+				if (res.status != 200) {
+					createMessage(res.message, "error");
 				} else {
-					closeModal();
-					console.log($(`.shipping-card#${id}`));
-					$(`.shipping-card#${id}`).html(res.data.view);
+					if (action == "setDefault") {
+						$("#addressDefault").html(
+							"<span class='text-dark'>Default Address</span>"
+						);
+						$("#shippingList").html(res.data.view);
+					} else {
+						closeModal();
+						console.log($(`.shipping-card#${id}`));
+						$(`.shipping-card#${id}`).html(res.data.view);
+					}
+					createMessage(res.message);
 				}
-				createMessage(res.message);
-			}
-		}, "json");
+			},
+			"json"
+		);
 	});
 
-	$(document).on("click", "#navSearchBtn", function(e) {
-		console.log("test")
+	$(document).on("click", "#navSearchBtn", function (e) {
+		console.log("test");
 		$("#navSearchForm").submit();
-	})
+	});
 
 	// NOTE: This is for disabling sibling checkbox from selecting the main image
 	// Decided to use radio box since the logic already is applicable to radio boxes

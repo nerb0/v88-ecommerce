@@ -218,6 +218,7 @@ body {
 .light-effect-container {
 	position: relative;
 	overflow: hidden;
+	white-space: nowrap;
 }
 .light-effect {
 	z-index: 0;
@@ -981,16 +982,29 @@ body {
 	overflow-y: hidden;
 	overflow-x: scroll;
 	width: 100%;
-	padding: 10px 0;
+	padding: 5px 0;
 	height: 80px;
 	white-space: nowrap;
 }
 .product-image-sub > * {
 	display: inline-block;
-	background-color: var(--primary-light);
-	object-fit: cover;
+	box-sizing: border-box;
+	border: 1px solid var(--primary);
+	padding: 2px;
 	width: 90px;
 	height: 100%;
+	cursor: pointer;
+}
+.product-image-sub img  {
+	background-color: var(--primary-light);
+	height: 100%;
+	width: 100%;
+	object-fit: cover;
+	pointer-events: none;
+}
+.product-image-selected {
+	border: 1px solid var(--primary-light);
+	cursor: default;
 }
 .product-image-sub > *:not(:last-child) {
 	margin-right: 15px;
@@ -1000,6 +1014,10 @@ body {
 	vertical-align: top;
 	width: calc(100% - 320px);
 	position: relative;
+}
+.product-description-text {
+	height: 300px;
+	overflow-y: scroll;
 }
 .product-header {
 	margin: 10px 0;
@@ -1028,6 +1046,10 @@ body {
 .product-buy-form > .product-add-btn {
 	display: inline-block;
 	vertical-align: middle;
+}
+.product-buy-form > .product-add-btn > a {
+	display: block;
+	text-decoration: none;
 }
 
 .reviews-container {
@@ -1683,4 +1705,9 @@ body {
 }
 .notif-message.error, .notif-message.error *{
 	color: var(--primary-light);
+}
+.checkout-loading {
+	fill: var(--secondary);
+	height: 68px;
+	padding: 0;
 }

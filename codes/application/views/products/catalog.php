@@ -43,14 +43,6 @@
 			</form><!--
 			--><div class="catalog-list" id="catalogList">
 				<div class="product-list"><!--
-				<?php for ($i = 0; $i < 25; $i++) { ?>
-					--><div class="product-card animate-pulse">
-						<div src="" alt="" class="product-image-load"></div>
-						<div class="product-name-load"></div>
-						<div class="product-price-load"></div>
-						<div class="product-sold-load"></div>
-					</div><!--
-				<?php } ?>
 				--></div>
 			</div>
 		</div>

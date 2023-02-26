@@ -5,7 +5,7 @@
 		<path d="M1.5 1.5l12 12m-12 0l12-12"></path>
 	</svg>
 	<h3 class="text-dark">Add new Product</h3>
-	<form action="/products/preview_add" method="post" enctype="multipart/form-data" class="product-form" target="_blank">
+	<form action="/products/preview" method="post" enctype="multipart/form-data" class="product-form" target="_blank">
 		<input type="hidden" name="uploaded_images" id="uploadedImages"/>
 		<input type="hidden" name="image_sort" id="imageSort"/>
 		<input type="hidden" value="<?= $this->security->get_csrf_hash() ?>" name="<?= $this->security->get_csrf_token_name() ?>" />

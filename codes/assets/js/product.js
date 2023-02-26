@@ -18,30 +18,43 @@ $(document).ready(function () {
 	const catalogPage = $("#catalogPage");
 	const catalogBottomPage = $("#catalogBottomPage");
 	const getPage = (page) => {
-		$.get(`/api/html/products/catalog/get/page/${page}`,
-			$("#searchFilter,#catalogFilter").serialize(),
-			(res) => {
-				catalogList.html(res.data);
-				catalogPage.html(res.pages);
-				catalogBottomPage.html(res.pages);
-				$(`.catalog-page-btn#${page}`).siblings().removeClass("active");
-				$(`.catalog-page-btn#${page}`).addClass("active");
-			},
-			"json"
-		);
+		const loadingPlaceholder = `<!----><div class="product-card animate-pulse"> <div src="" alt="" class="product-image-load"></div> <div class="product-name-load"></div> <div class="product-price-load"></div> <div class="product-sold-load"></div> </div><!---->`
+		catalogList.html(loadingPlaceholder.repeat(20));
+		setTimeout(() => {
+			$.get(`/api/html/products/catalog/get/page/${page}`,
+				$("#searchFilter,#catalogFilter").serialize(),
+				(res) => {
+					$("#searchFilter input,#catalogFilter select, #catalogFilter input").removeAttr("disabled");
+					catalogList.html(res.data);
+					catalogPage.html(res.pages);
+					catalogBottomPage.html(res.pages);
+					$(`.catalog-page-btn#${page}`).siblings().removeClass("active");
+					$(`.catalog-page-btn#${page}`).addClass("active");
+				},
+				"json"
+			);
+		}, 1500)
 	};
-	setTimeout(() => getPage(1), 2000);
+	getPage(1);
 	$(document).on("click", ".catalog-page-btn", function (e) {
 		const page = this.id;
 		getPage(page);
 	});
 	$(document).on(
-		"change keyup keydown",
+		"change",
 		"#searchProduct, #catalogFilter input, #catalogFilter select",
 		function (e) {
+			$("#searchFilter input,#catalogFilter select, #catalogFilter input").attr("disabled", "");
 			getPage(1);
 		}
 	);
+
+	const mainImage = $("#mainImagePreview");
+	$(document).on("click", ".product-image-sub > div:not(.product-image-selected)", function(e) {
+		mainImage.attr("src", $(this).find("img").attr("src"));
+		$(".product-image-selected").removeClass("product-image-selected");
+		$(this).addClass("product-image-selected");
+	})
 
 	$(document).on("submit", "#addToCartForm", function (e) {
 		e.preventDefault();
@@ -206,4 +219,8 @@ $(document).ready(function () {
 			}, "json");
 		}
 	});
+
+	$(document).on("submit", "form#checkoutForm", function(e) {
+		$("#checkoutSubmitBtn").replaceWith(` <svg id="checkoutSubmitBtn" class="btn btn-sharp btn-span checkout-loading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" overflow="visible"> <defs><circle id="inline" cx="20" cy="50" r="6"></circle></defs> <use xlink:href="#inline" x="0"> <animate attributeName="opacity" values="0;1;0" dur="1s" begin="0s" repeatCount="indefinite"></animate> </use> <use xlink:href="#inline" x="20"> <animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.25s" repeatCount="indefinite"></animate> </use> <use xlink:href="#inline" x="40"> <animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.5s" repeatCount="indefinite"></animate> </use> <use xlink:href="#inline" x="60"> <animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.75s" repeatCount="indefinite"></animate></use></svg>`)
+	})
 });

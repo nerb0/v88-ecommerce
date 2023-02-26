@@ -64,7 +64,7 @@
 			<div class="product-info-container">
 				<div class="product-header">
 					<h2 class="product-name"><?= $name ?? "" ?></h2>
-					<p class="product-price">$<?= number_format($price ?? 0, 2) ?></p>
+					<p class="product-price">$<?= number_format((is_int($price) ? $price : 0), 2) ?></p>
 				</div>
 				<div class="product-info">
 					<div class="product-image-group">
@@ -82,24 +82,24 @@
 						</div>
 					</div><!--
 					--><div class="product-description">
-					<h3>About this Product:</h3>
-					<?= $description ?? "" ?>
+						<h3>About this Product:</h3>
+						<?= $description ?? "" ?>
 					</div>
-					<form action="/cart/test" method="POST" class="product-buy-form" id="addToCartForm">
+					<div class="product-buy-form">
 						<input class="product-quantity btn-outline-secondary" type="number" name="quantity" placeholder="Quantity" min="1" value="1"/>
 						<div class="light-effect-container product-add-btn">
 							<span id="lightEffect" class="light-effect light-hidden light-secondary" style="--radius:200px;"></span>
 							<input type="submit" value="Add to Cart" class="btn btn-md btn-sharp btn-outline-secondary" />
 						</div>
-					</form>
+					</div>
 				</div>
 			</div>
 			<div class="reviews-container">
 				<h3>Create a Review</h3>
-				<form action="/products/test" class="review-form" method="post">
+				<div class="review-form">
 					<textarea name="message" placeholder="Enter message here..." class="btn-outline-secondary input-textarea"></textarea><!--
 					--><input type="submit" value="Send Message" class="add-btn btn btn-md btn-sharp btn-outline-secondary btn-span" />
-				</form>
+				</div>
 				<h2>Reviews</h2>
 				<ul class="review-list">
 					<li class="relative">
@@ -112,11 +112,11 @@
 								<div class="user">User full name wrote: </div>
 								<div class="message">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pulvinar tellus vitae erat pharetra malesuada. Morbi ante risus, consectetur id mauris quis, laoreet rhoncus leo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Cras eget dapibus odio. Proin rutrum pharetra egestas. Cras in massa eget augue fringilla tempor.</div>
 							</li>
-							<form action="products/test" method="post" class="reply-form">
+							<div action="#" class="reply-form">
 								<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>" />
 								<textarea name="message" placeholder="Enter message here..." class="btn-outline-secondary input-textarea"></textarea><!--
 								--><input type="submit" value="Send Message" class="add-btn btn btn-md btn-sharp btn-outline-secondary btn-span" />
-							</form>
+							</div>
 						</ul>
 					</li>
 				</ul>

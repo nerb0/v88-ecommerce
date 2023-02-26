@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	<main class="checkout-container">
-		<form action="/cart/process_checkout" method="post">
+		<form action="/cart/process_checkout" method="post" id="checkoutForm">
 			<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>" />
 			<h2 class="mt-md">Your Orders:</h2>
 			<div class="mt-md">
@@ -160,7 +160,7 @@
 			</div>
 			<div class="light-effect-container mt-md">
 				<span id="lightEffect" class="light-effect light-hidden light-secondary" style="--radius:600px;"></span>
-				<input type="submit" value="Checkout Order" class="btn btn-lg btn-sharp btn-outline-secondary btn-span" />
+				<input type="submit" value="Checkout Order" class="btn btn-lg btn-sharp btn-outline-secondary btn-span" id="checkoutSubmitBtn" />
 			</div>
 		</form>
 	</main>

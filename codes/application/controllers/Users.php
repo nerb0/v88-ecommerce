@@ -8,15 +8,11 @@ class Users extends CI_Controller {
 
 	public function index() {
 		$user = $this->User->get_by_id($this->session->userdata("user_id"));
-		if(empty($user)) {
-			redirect('login');
-		}
 		$this->load->model("Cart");
 		$this->load->model("Product");
 		$this->load->model("Category");
 		$view_data = [
 			"products/home" => [
-				"user" => $user,
 				"categories" => $this->Category->get_all(5),
 				"banner_products" => $this->Product->get_banner(),
 				"featured_products" => $this->Product->get_featured(),
@@ -31,7 +27,7 @@ class Users extends CI_Controller {
 				"js" => [],
 				"css" => [],
 			],
-			"cart_count" => count($this->Cart->get_user_items($user["id"])),
+			"cart_count" => count($this->Cart->get_user_items($user["id"] ?? -1)) ?? 0,
 			"message" => $this->session->flashdata("message"),
 			"message_type" => $this->session->flashdata("message_type"),
 			"user" => $user
@@ -108,12 +104,12 @@ class Users extends CI_Controller {
 	}
 
 	public function profile() {
+		$user = $this->User->get_by_session();
+		if (empty($user)) {
+			redirect("/login");
+		}
 		$this->load->model("Cart");
 		$this->load->model("Address");
-		$user = $this->User->get_by_id($this->session->userdata("user_id"));
-		if(empty($user)) {
-			redirect('login');
-		}
 		$view_data = [
 			"users/profile" => [
 				"user" => $user,
@@ -159,6 +155,13 @@ class Users extends CI_Controller {
 		$this->session->set_flashdata("message", $message);
 		$this->session->set_flashdata("message_type", $type);
 		redirect("/users/profile");
+	}
+
+	public function orders() {
+		$user = $this->User->get_by_session();
+		if (empty($user)) {
+			redirect("/login");
+		}
 	}
 
 	public function logout() {
