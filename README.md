@@ -1,6 +1,3 @@
-Below is an example README.md that you can use as a starting point for the v88-ecommerce repository:
-
----
 
 # SlapStick
 
