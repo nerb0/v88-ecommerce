@@ -1,4 +1,1 @@
-## [ECOMMERCE] Village 88 PHP Capstone
-
-### ERD
-![alt text](./ERD.png)
+## [SlapStick] Village 88 PHP Capstone
