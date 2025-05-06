@@ -7,6 +7,7 @@ SlapStick is a full-featured, modern e-commerce platform designed to deliver an 
 
 - [Features](#features)
 - [Tech Stack](#tech-stack)
+- [Demo](#demo)
 - [License](#license)
 - [Contact](#contact)
 
@@ -27,6 +28,11 @@ SlapStick is a full-featured, modern e-commerce platform designed to deliver an 
 - **Database:** MySQL
 - **Authentication:** JWT / OAuth 2.0
 - **Payment Processing:** Stripe
+
+## Demo
+
+A live demo is available at: [v88-ecommerce Demo](https://www.youtube.com/watch?v=jpbHBKC8vag&list=PL0hM9oGxTpCjqfluHsLRsDEoaiR33qroe)  
+
 
 ## License
 
